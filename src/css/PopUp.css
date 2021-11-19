@@ -1,0 +1,28 @@
+AnchorPane{
+    -fx-background-color: white;
+    -fx-background-radius:10;
+    -fx-border-style:solid;
+    -fx-border-width: 2px;
+    -fx-background-size: 100%;
+    -fx-border-radius:5;
+    -fx-effect:  dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+.btnTender{
+    -fx-background-color:
+        linear-gradient(#f0ff35, #a9ff00),
+        radial-gradient(center 50% -40%, radius 200%, #FFC164 45%, #ff9900 50%);
+    -fx-background-radius: 6, 5;
+    -fx-background-insets: 0, 1;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
+}
+.btnTender:hover {
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.9) , 3, 0.0 , 0 , 3 );
+}
+.btnTender:focused {
+    -fx-background-color:
+        linear-gradient(#f0ff35, #a9ff00),
+        radial-gradient(center 50% -40%, radius 200%, #FFC164 45%, #ff9900 50%);
+    -fx-background-radius: 6, 5;
+      -fx-background-insets: -1.4, 0, 1, 3;
+  -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.9) , 3, 0.0 , 0 , 3 );
+}

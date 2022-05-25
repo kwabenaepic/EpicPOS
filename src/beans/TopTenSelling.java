@@ -52,11 +52,26 @@ public class TopTenSelling {
 
     private final StringProperty productId;
     private final StringProperty itemName;
+
+    public String getDescription() {
+        return description.get();
+    }
+
+    public StringProperty descriptionProperty() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description.set(description);
+    }
+
+    private final StringProperty description;
     private final StringProperty quantityBought;
 
     public TopTenSelling() {
         this.productId = new SimpleStringProperty();
         this.itemName = new SimpleStringProperty();
+        this.description = new SimpleStringProperty();
         this.quantityBought = new SimpleStringProperty();
     }
 }

@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  */
 public class ReportsController implements Initializable {
 
-    AnchorPane home, inventory, inventoryValue, employees, sales, reports, bestOrWorstSellers, controls, stockSummaryAmbient, meterReconciliation;
+    AnchorPane home, inventory, inventoryValue, employees, sales, reports, bestOrWorstSellers;
     @FXML
     private StackPane holderPaneTwo;
 
@@ -40,7 +40,7 @@ public class ReportsController implements Initializable {
 
         try {
 //            home = FXMLLoader.load(getClass().getResource("/view/Home.fxml"));
-            inventory = FXMLLoader.load(getClass().getResource("/view/Inventory.fxml"));
+            inventory = FXMLLoader.load(getClass().getResource("/view/InventoryReports.fxml"));
             inventoryValue = FXMLLoader.load(getClass().getResource("/view/InventoryValue.fxml"));
             sales = FXMLLoader.load(getClass().getResource("/view/SalesReports.fxml"));
             bestOrWorstSellers = FXMLLoader.load(getClass().getResource("/view/BestOrWorstSales.fxml"));

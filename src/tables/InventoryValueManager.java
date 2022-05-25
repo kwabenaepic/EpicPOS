@@ -10,10 +10,7 @@ import database.ConnectionManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 /**
  *
@@ -21,7 +18,7 @@ import java.sql.Statement;
  */
 public class InventoryValueManager {
 
-    private static Connection conn = ConnectionManager.getConnection();
+    private static Connection conn = ConnectionManager.getInstance().getConnection();
 
     public static ObservableList<InventoryValue> getInventoryValueList() throws SQLException {
         ObservableList<InventoryValue> inventoryValueList = FXCollections.observableArrayList();
@@ -35,13 +32,49 @@ public class InventoryValueManager {
                 InventoryValue bean = new InventoryValue();
                 bean.setProductId(rs.getInt("productId"));
                 bean.setProductName(rs.getString("productName"));
+                bean.setDescription(rs.getString("description"));
                 bean.setQuantity(rs.getInt("quantity"));
                 bean.setUnitPrice(rs.getDouble("unitPrice"));
+                bean.setCostPrice(rs.getDouble("costPrice"));
                 bean.setTotalValue(rs.getDouble("totalValue"));
                 inventoryValueList.add(bean);
             }
             return inventoryValueList;
 
         }
+    }
+
+    public static Double getStockValue() throws SQLException {
+        String sql = "select sum(totalvalue) as stockValue from inventoryvalue ";
+
+        ResultSet rs = null;
+        Double stockValue = 0.0;
+//        System.out.println(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+           rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                stockValue = rs.getDouble(1);
+            }
+        }
+
+        return stockValue;
+    }
+
+    public static Integer getSumInventory() throws SQLException {
+        String sql = "select sum(quantity) as sumInventory from inventoryvalue ";
+
+        ResultSet rs = null;
+        int sumInventory = 0;
+//        System.out.println(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                sumInventory = rs.getInt(1);
+            }
+        }
+
+        return sumInventory;
     }
 }

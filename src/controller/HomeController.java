@@ -6,7 +6,6 @@ import beans.TopTenSelling;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,12 +17,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import tables.EmployeeLoginsManager;
+import tables.InventoryValueManager;
 import tables.ProductManager;
 import tables.SaleReportsManager;
 
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Calendar;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +36,12 @@ import java.util.logging.Logger;
  */
 public class HomeController implements Initializable {
 
+    @FXML
+    public Label lblMonth;
+    @FXML
+    public Label lblStockValue;
+    @FXML
+    public Label lblSumInventoryValue;
     @FXML
     private Label lblTotalSalesToday;
     @FXML
@@ -62,12 +69,14 @@ public class HomeController implements Initializable {
     @FXML
     private TableColumn<TopTenSelling, String> tblClmName;
     @FXML
+    private TableColumn<TopTenSelling, String> tblClmDescription;
+    @FXML
     private TableColumn<TopTenSelling, String> tblClmQuantityBought;
     @FXML
     private TableView<TopTenSelling> tblTopTenSelling;
     private SimpleDoubleProperty totalSalesTodayProperty = new SimpleDoubleProperty(0.0);
     private SimpleDoubleProperty totalSalesForMonthProperty = new SimpleDoubleProperty(0.0);
-    private SimpleStringProperty totalSalesForPreviousMonthProperty = new SimpleStringProperty("0");
+    private SimpleDoubleProperty totalSalesForPreviousMonthProperty = new SimpleDoubleProperty(0.0);
     private SimpleIntegerProperty totalItemsSoldToday = new SimpleIntegerProperty(0);
     private SimpleIntegerProperty totalItemsSoldForMonth = new SimpleIntegerProperty(0);
     @FXML
@@ -104,12 +113,13 @@ public class HomeController implements Initializable {
         salesMonthly.add("November");
         salesMonthly.add("December");
         cbSalesMonthly.setItems(salesMonthly);
-        cbSalesMonthly.getSelectionModel().select(getCurrentMonth());
+        cbSalesMonthly.getSelectionModel().select(getCurrentMonth()-1);
+        System.out.println(getCurrentMonth());
         cbSalesMonthly.setVisibleRowCount(8);
-        String value = cbSalesMonthly.getSelectionModel().getSelectedItem();
+//        String value = cbSalesMonthly.getSelectionModel().getSelectedItem();
         try {
-            lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(getCurrentMonth() + 1) + "");
-            lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(getCurrentMonth() + 1) + "");
+            lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(getCurrentMonth()).toString());
+            lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(getCurrentMonth()).toString());
         } catch (SQLException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -134,24 +144,27 @@ public class HomeController implements Initializable {
                     public void run() {
                         try {
 
-//                            totalSalesTodayProperty.set(SaleReportsManager.getTotalSalesToday());
-//                            totalItemsSoldToday.set(SaleReportsManager.getSumItemsSoldToday());
-//                            totalSalesForMonthProperty.set(SaleReportsManager.getTotalSalesForAMonth(getCurrentMonth() + 1));
-//                            if ((getCurrentMonth() + 1) == 1) {
-//                                totalSalesForPreviousMonthProperty.set(SaleReportsManager.getTotalSalesForAMonthIfJan(getCurrentMonth() + 12) + "");
-//                            } else {
-//                                totalSalesForPreviousMonthProperty.set(SaleReportsManager.getTotalSalesForAMonth(getCurrentMonth() + 1) + "");
-//                            }
-//                            totalItemsSoldForMonth.set(SaleReportsManager.getSumItemsSoldForAMonth(getCurrentMonth() + 1));
+                            totalSalesTodayProperty.set(SaleReportsManager.getTotalSalesToday());
+                            totalItemsSoldToday.set(SaleReportsManager.getSumItemsSoldToday());
+                            totalSalesForMonthProperty.set(SaleReportsManager.getTotalSalesForAMonth((getCurrentMonth())));
 
-//                            lblTotalSalesToday.textProperty().bind(totalSalesTodayProperty.asString());
-//                            lblTotalItemsSoldForToday.textProperty().bind(totalItemsSoldToday.asString());
-//                            lblMonthlySales.textProperty().bind(totalSalesForMonthProperty.asString());
-////                            lblTotalPreviousMonthSales.textProperty().bind(totalSalesForPreviousMonthProperty);
-//                            lblSumMonthlySales.textProperty().bind(totalItemsSoldForMonth.asString());
-//                            configureTopTenSellingTable();
-//                            configureEmployeeLogedInTable();
-//                            configureReorderListTable();
+                            if (("0"+(getCurrentMonth() + 1)).equals("12")) {
+//                                totalSalesForPreviousMonthProperty.set(SaleReportsManager.getTotalSalesForAMonthIfJan(getCurrentMonth() + 12) + "");
+                            } else {
+                                totalSalesForPreviousMonthProperty.set(SaleReportsManager.getTotalSalesForAMonth(getCurrentMonth()));
+                            }
+                            totalItemsSoldForMonth.set(SaleReportsManager.getSumItemsSoldForAMonth((getCurrentMonth())));
+
+                            lblTotalSalesToday.textProperty().bind(totalSalesTodayProperty.asString());
+                            lblTotalItemsSoldForToday.textProperty().bind(totalItemsSoldToday.asString());
+                            lblMonthlySales.textProperty().bind(totalSalesForMonthProperty.asString());
+//                            lblTotalPreviousMonthSales.textProperty().bind(totalSalesForPreviousMonthProperty);
+                            lblSumMonthlySales.textProperty().bind(totalItemsSoldForMonth.asString());
+                            lblStockValue.setText(InventoryValueManager.getStockValue().toString());
+                            lblSumInventoryValue.setText(InventoryValueManager.getSumInventory().toString());
+                            configureTopTenSellingTable();
+                            configureEmployeeLogedInTable();
+                            configureReorderListTable();
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -169,7 +182,6 @@ public class HomeController implements Initializable {
                     Platform.runLater(updater);
                 }
             }
-
         });
         // don't let thread prevent JVM shutdown
         thread.setDaemon(true);
@@ -178,10 +190,8 @@ public class HomeController implements Initializable {
     }
 
     private Integer getCurrentMonth() {
-        Calendar cal = Calendar.getInstance();
-        int currentMonth = cal.get(Calendar.MONTH);
+        int currentMonth = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getMonthValue();
         return currentMonth;
-
     }
 
     @FXML
@@ -191,65 +201,68 @@ public class HomeController implements Initializable {
         try {
             switch (value) {
                 case "January":
-                    lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(1) + "");
-//                    totalSalesForPreviousMonthProperty.set(SaleReportsManager.getTotalSalesForAMonthIfJan(getCurrentMonth() - 1) + "");
-                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(1) + "");
-                    break;
+
+                    lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(1).toString());
+//                    lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth("01").toString());
+                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(1).toString());
+//                    break;
                 case "February":
-                    lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(2) + "");
-//                    lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(2 - 1) + "");
-                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(2) + "");
+                    lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(2).toString());
+                    lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(1).toString());
+                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(2).toString());
                     break;
                 case "March":
-                    lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(3) + "");
-//                    lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(3 - 1) + "");
-                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(3) + "");
+                    lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(3).toString() );
+                    lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(2).toString());
+                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(3).toString());
                     break;
                 case "April":
-                    lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(4) + "");
-//                    lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(4 - 1) + "");
-                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(4) + "");
+                    lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(4).toString() );
+                     lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(3).toString());
+                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(4).toString());
                     break;
+
                 case "May":
-                    lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(5) + "");
-//                    lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(5 - 1) + "");
-                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(5) + "");
+                     lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(5).toString() );
+                     lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(4).toString());
+                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(5).toString());
+                    break;
                 case "June":
-                    lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(6) + "");
-//                    lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(6 - 1) + "");
-                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(6) + "");
+                      lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(6).toString() );
+                     lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(5).toString());
+                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(6).toString());
                     break;
                 case "July":
-                    lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(7) + "");
-//                    lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(7 - 1) + "");
-                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(7) + "");
+                     lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(7).toString() );
+                      lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(6).toString());
+                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(7).toString());
                     break;
                 case "August":
-                    lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(8) + "");
-//                    lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(8 - 1) + "");
-                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(8) + "");
+                    lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(8).toString() );
+                      lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(7).toString());
+                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(8).toString());
                     break;
                 case "September":
-                    lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(9) + "");
-//                    lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(9 - 1) + "");
-                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(9) + "");
+                   lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(9).toString() );
+                      lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(8).toString());
+                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(9).toString());
                     break;
                 case "October":
-                    lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(10) + "");
-//                    lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(10 - 1) + "");
-                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(10) + "");
+                   lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(10).toString() );
+                     lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(9).toString());
+                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(10).toString());
                     break;
                 case "November":
-                    lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(11) + "");
-//                    lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(11 - 1) + "");
-                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(11) + "");
+                     lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(11).toString() );
+                      lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(10).toString());;
+                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(11).toString());
                     break;
                 case "December":
-                    lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(12) + "");
-//                    lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(12 - 1) + "");
-                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(12) + "");
+                    lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(12).toString() );
+                      lblTotalPreviousMonthSales.setText(SaleReportsManager.getTotalSalesForAMonth(11).toString());
+                    lblTotalNumberOfSalesForMonth.setText(SaleReportsManager.getSumItemsSoldForAMonth(12).toString());
                     break;
-                default:
+//                default:
 ////                    tblSales.getItems().clear();
 //                         lblTotalMonthlySales.setText(SaleReportsManager.getTotalSalesForAMonth(3) + "");
 
@@ -263,15 +276,9 @@ public class HomeController implements Initializable {
     private void getSalesMonthly() {
     }
 
-    {
-        int value = getCurrentMonth();
-        System.out.println(value);
-
-    }
-
     private void configureEmployeeLogedInTable() {
 //        tblClmEmployeeId.setCellValueFactory(new PropertyValueFactory<>("employeeId"));
-        tblClmEmployeeName.setCellValueFactory(new PropertyValueFactory<>("userName"));
+        tblClmEmployeeName.setCellValueFactory(new PropertyValueFactory<>("username"));
         tblClmOutletId.setCellValueFactory(new PropertyValueFactory<>("salesOutletId"));
 
         tblEmployeesLogedIn.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -291,10 +298,14 @@ public class HomeController implements Initializable {
     private void configureTopTenSellingTable() {
         tblClmProductId.setCellValueFactory(new PropertyValueFactory<>("productId"));
         tblClmName.setCellValueFactory(new PropertyValueFactory<>("itemName"));
+        tblClmDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         tblClmQuantityBought.setCellValueFactory(new PropertyValueFactory<>("quantityBought"));
 
         tblTopTenSelling.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tblTopTenSelling.setItems(null);
+//        tblClmProductId.setPrefWidth(50);
+//        tblClmProductId.setMinWidth(50);
+//        tblClmProductId.setMaxWidth(50);
 //        actionCol.setSortable(false);
         topTenSelling = FXCollections.observableArrayList();
         try {

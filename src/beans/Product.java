@@ -142,17 +142,17 @@ public class Product {
 //    public final StringProperty attributeProperty() {
 //        return attribute;
 //    }
-//    public final void setSize(String value) {
-//        size.set(value);
-//    }
-//
-//    public final String getSize() {
-//        return size.get();
-//    }
-//
-//    public final StringProperty sizeProperty() {
-//        return size;
-//    }
+    public final void setSize(String value) {
+        size.set(value);
+    }
+
+    public final String getSize() {
+        return size.get();
+    }
+
+    public final StringProperty sizeProperty() {
+        return size;
+    }
     public final void setALU(String value) {
         ALU.set(value);
     }
@@ -199,7 +199,7 @@ public class Product {
 //    private final StringProperty suppleirId;
     private final DoubleProperty unitPrice;
 //    private final StringProperty attribute;
-//    private final StringProperty size;
+    private final StringProperty size;
     private final StringProperty ALU;
     private final StringProperty UPC;
     private final StringProperty vendorCode;
@@ -215,7 +215,7 @@ public class Product {
 //        this.suppleirId = new SimpleStringProperty();
         this.unitPrice = new SimpleDoubleProperty();
 //        this.attribute = new SimpleStringProperty();
-//        this.size = new SimpleStringProperty();
+        this.size = new SimpleStringProperty();
         this.ALU = new SimpleStringProperty();
         this.UPC = new SimpleStringProperty();
         this.vendorCode = new SimpleStringProperty();

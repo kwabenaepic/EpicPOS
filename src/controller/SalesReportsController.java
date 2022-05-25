@@ -5,6 +5,7 @@
  */
 package controller;
 
+import beans.Business;
 import beans.ProductsInTransaction;
 import beans.ReceiptsReprint;
 import beans.SaleReports;
@@ -29,17 +30,21 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Callback;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperPrintManager;
+import javafx.util.Duration;
+import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.design.JRDesignQuery;
+import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
 import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
+import net.sf.jasperreports.view.JasperViewer;
+import org.controlsfx.control.Notifications;
+import tables.BusinessManager;
 import tables.ProductsInTransactionManager;
 import tables.SaleReportsManager;
 
@@ -48,10 +53,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -101,7 +104,7 @@ public class SalesReportsController implements Initializable {
     private ObservableList<SaleReports> tableData = FXCollections.observableArrayList();
     private ObservableList<ProductsInTransaction> tableDataProduct = FXCollections.observableArrayList();
     private ObservableList<ProductsInTransaction> dataList = FXCollections.observableArrayList();
-    private static Connection conn = ConnectionManager.getConnection();
+    private static Connection conn = ConnectionManager.getInstance().getConnection();
 
     @FXML
     private Button btnHide;
@@ -143,12 +146,14 @@ public class SalesReportsController implements Initializable {
     @FXML
     private TableColumn<SaleReports, Double> tblClmBalance;
     HashMap<Integer, Double> saleItems = new HashMap();
+    private Business businessData ;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         // TODO
         final ProgressIndicator progressIndicator = new ProgressIndicator(0);
         dateRange = FXCollections.observableArrayList();
@@ -156,7 +161,7 @@ public class SalesReportsController implements Initializable {
         dateRange.add("Today");
         dateRange.add("Yesterday");
         dateRange.add("This Week");
-        dateRange.add("Last Week");
+//        dateRange.add("Last Week");
         dateRange.add("This Month");
         dateRange.add("Last Month");
         dateRange.add("All Sales");
@@ -170,13 +175,11 @@ public class SalesReportsController implements Initializable {
             @Override
             public void run() {
                 Runnable updater = new Runnable() {
-
                     @Override
                     public void run() {
 //                        configureTable();
                     }
                 };
-
                 while (true) {
                     try {
                         Thread.sleep(1000);
@@ -186,11 +189,16 @@ public class SalesReportsController implements Initializable {
                     Platform.runLater(updater);
                 }
             }
-
         });
         // don't let thread prevent JVM shutdown
         thread.setDaemon(true);
         thread.start();
+
+        try {
+            businessData = BusinessManager.getCompanyInfo();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public double calcSubTotal() {
@@ -279,19 +287,19 @@ public class SalesReportsController implements Initializable {
             dpDateFrom.requestFocus();
 
         } else {
+            System.out.println(dpDateFrom.getValue().toString());
+            System.out.println(dpDateTo.getValue().toString());
             tblSales.getItems().clear();
             tableData.addAll(SaleReportsManager.getSaleportBetweenDateRange(dpDateFrom.getValue().toString(), dpDateTo.getValue().toString()));
             tblSales.setItems(tableData);
-            System.out.println(dpDateFrom.getValue().toString());
-            System.out.println(dpDateTo.getValue().toString());
 
         }
-
     }
 
     @FXML
     private void btnReprintReceiptOnAction(ActionEvent event) throws JRException, SQLException {
         showReport(selectedReceipt);
+
     }
 
     @FXML
@@ -350,7 +358,7 @@ public class SalesReportsController implements Initializable {
                     } else {
 
                         splitPane.getItems().add(1, bpRightAnchor);
-                        splitPane.setDividerPosition(1, 0.8);
+                        splitPane.setDividerPosition(1, 0.7);
                         SaleReports selectedInvoice = (SaleReports) ButtonCell.this.getTableView().getItems().get(ButtonCell.this.getIndex());
 
                         try {
@@ -386,72 +394,39 @@ public class SalesReportsController implements Initializable {
         }
     }
 
-    public void showReport(String ticketNumber) {
-//        Connection conn = ConnectionManager.getInstance().getConnection();
-//        try {
-//            JasperDesign jd = null;
-//            String sql = "SELECT * FROM productsbytickenumber "
-//                    + "JOIN salereports on productsbyticketnumber.ticketNumber = salereports.ticketNumber "
-//                    + "WHERE productsbyticketnumber.ticketNumber = " + ticketNumber;
-//
-//            jd = JRXmlLoader.load("src\\reports\\Receipts.jrxml");
-////             jd = JRXmlLoader.load("C:/Users/hp/Documents/NetBeansProjects/EpicPOSAdmin/src/reports/Receipts.jrxml");
-////                   jd = JRXmlLoader.load("user.dir/reports/Receipts.jrxml");
-////                   System.out.println(jd.toString());
-//            JRDesignQuery newQuery = new JRDesignQuery();
-//            newQuery.setText(sql);
-//            jd.setQuery(newQuery);
-//
-//            JasperReport jr = JasperCompileManager.compileReport(jd);
-//            JasperPrint jp = JasperFillManager.fillReport(jr, null, conn);
-//            JasperViewer.viewReport(jp, false);
-//            JasperPrintManager.printReport(jp, true);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-        String sourceFileName = ("src\\reports\\ReceiptsPOSAdmin.jasper");
-//      String sourceFileName = ("C:/Users/hp/Documents/NetBeansProjects/EpicPOS/src/reports/ReceiptsPOS.jasper");
-        String printFileName = null;
-        ObservableList<ReceiptsReprint> beanSaleItemList = FXCollections.observableArrayList();
-
-        for (ProductsInTransaction model : tableDataProduct) {
-            ReceiptsReprint beanSaleItem = new ReceiptsReprint();
-            beanSaleItem.setProductName(model.getProductName());
-            beanSaleItem.setQuantityBought(model.getQuantityBought());
-            beanSaleItem.setUnitPrice(model.getUnitPrice());
-            beanSaleItem.setTicketNumber(model.getTicketNumber());
-            beanSaleItem.setTotal(Double.parseDouble(lblTotal.getText()));
-            beanSaleItem.setReceiptDate(lblSaleItemDate.getText());
-            beanSaleItem.setAmountPaid(Double.parseDouble(lblAmountPaid.getText()));
-            beanSaleItem.setChange(Double.parseDouble(lblBalance.getText()));
-//            beanSaleItem.setChange(Double.parseDouble(lblBalance.getText()));
-            beanSaleItemList.add(beanSaleItem);
-            System.out.println(beanSaleItem.getAmountPaid());
-        }
-//        System.out.println(beanSaleItemList.size());
-////        for (ProductsInTransaction model : tableDataProduct) {
-//        ReceiptsReprint beanSaleItem = new ReceiptsReprint();
-//        beanSaleItem.setReceiptDate(lblSaleItemDate.getText());
-//        beanSaleItem.setAmountPaid(Double.parseDouble(lblAmountPaid.getText()));
-//        beanSaleItem.setChange(Double.parseDouble(lblBalance.getText()));
-////            beanSaleItem.setTicketNumber(model.getTicketNumber());
-////            beanSaleItem.setTotal(model.getTotal());
-//        beanSaleItemList.add(beanSaleItem);
-////        }
-//        System.out.println(lblSaleItemDate.getText());
-
-        JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(beanSaleItemList);
-        Map<String, Object> parameters = new HashMap<>();
-//        parameters.put("receiptDate", dateLocal.getText());
+    public void showReport(String ticketNumber) throws JRException {
+        Map parameters = new HashMap();
+        parameters.put("companyName", businessData.getName());
+        parameters.put("location", businessData.getLocation());
+        parameters.put("mobile", businessData.getMobile());
+        parameters.put("address", businessData.getAddress());
+        Connection conn = ConnectionManager.getInstance().getConnection();
         try {
-            printFileName = JasperFillManager.fillReportToFile(
-                    sourceFileName, parameters, beanColDataSource);
-            if (printFileName != null) {
+            JasperDesign jd = null;
+            String sql = "SELECT * FROM productsbyticketnumber "
+                    + "JOIN salereports on productsbyticketnumber.ticketNumber = salereports.ticketNumber "
+                    + "WHERE productsbyticketnumber.ticketNumber = " + ticketNumber;
 
-                JasperPrintManager.printReport(printFileName, true);
-            }
-        } catch (JRException e) {
+            jd = JRXmlLoader.load(getClass().getResourceAsStream("/reports/ReceiptsPOS.jrxml"));
+            JRDesignQuery newQuery = new JRDesignQuery();
+            newQuery.setText(sql);
+            jd.setQuery(newQuery);
+
+            JasperReport jr = JasperCompileManager.compileReport(jd);
+            JasperPrint jp = JasperFillManager.fillReport(jr, parameters, conn);
+//            JasperViewer.viewReport(jp, false);
+            JasperPrintManager.printReport(jp, false);
+
+                Notifications notification = Notifications.create()
+                        .hideAfter(Duration.seconds(6))
+//                        .title("Receipt Printed")
+                        .text("Receipt Printed Successfully!")
+                        .graphic(null)
+                        .darkStyle()
+                        .position(Pos.CENTER);
+                notification.show();
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -482,7 +457,8 @@ public class SalesReportsController implements Initializable {
                     break;
                 case "This Month":
                     tblSales.getItems().clear();
-                    tableData.addAll(SaleReportsManager.getSaleportForThisMonth(getCurrentMonth() + 1));
+                    tableData.addAll(SaleReportsManager.getSaleportForThisMonth(getCurrentMonth()));
+//                    System.out.println("0"+ (getCurrentMonth() + 1));
                     tblSales.setItems(tableData);
                     break;
                 case "Last Month":
@@ -496,9 +472,9 @@ public class SalesReportsController implements Initializable {
                     tblSales.setItems(tableData);
                     break;
                 default:
-//                    tblSales.getItems().clear();
-//                    tableData.addAll(SaleReportsManager.getSaleportForToday());
-//                    tblSales.setItems(tableData);
+                    tblSales.getItems().clear();
+                    tableData.addAll(SaleReportsManager.getSaleportForToday());
+                    tblSales.setItems(tableData);
             }
 
         } catch (SQLException ex) {
@@ -507,8 +483,7 @@ public class SalesReportsController implements Initializable {
     }
 
     private Integer getCurrentMonth() {
-        Calendar cal = Calendar.getInstance();
-        int currentMonth = cal.get(Calendar.MONTH);
+        int currentMonth = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getMonthValue();
         return currentMonth;
     }
 

@@ -49,7 +49,8 @@ import java.util.logging.Logger;
  * @author KwabenaEpic
  */
 public class InventoryController implements Initializable {
-
+    @FXML
+    public TextField tfCategory;
     @FXML
     private AnchorPane acContent;
     @FXML
@@ -162,7 +163,7 @@ public class InventoryController implements Initializable {
 
                 if (product.getName().toLowerCase().contains(lowerCaseFilter)) {
                     return true; // Filter matches first name.
-                } else if (product.getProductId().toString().toLowerCase().contains(lowerCaseFilter)) {
+                } else if (product.getDescription().toLowerCase().contains(lowerCaseFilter)) {
                     return true; // Filter matches last name.
                 }
                 return false; // Does not match.
@@ -177,6 +178,7 @@ public class InventoryController implements Initializable {
 
         // 5. Add sorted (and filtered) data to the table.
         tblInventory.setItems(sortedData);
+
 
     }
 
@@ -227,6 +229,8 @@ public class InventoryController implements Initializable {
         tblClmItemId.setCellValueFactory(new PropertyValueFactory<>("productId"));
         tblClmItemName.setCellValueFactory(new PropertyValueFactory<>("name"));
         tblClmDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+        //Turned off, client requested it
         tblClmCostPrice.setCellValueFactory(new PropertyValueFactory<>("costPrice"));
         tblClmUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
         tblClmQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
@@ -234,7 +238,7 @@ public class InventoryController implements Initializable {
         tblClmCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
         tblClmVendorId.setCellValueFactory(new PropertyValueFactory<>("vendorCode"));
 //        tblClmAttribute.setCellValueFactory(new PropertyValueFactory<>("attribute"));
-//        tblClmSize.setCellValueFactory(new PropertyValueFactory<>("size"));
+        tblClmSize.setCellValueFactory(new PropertyValueFactory<>("size"));
         tblClmALU.setCellValueFactory(new PropertyValueFactory<>("ALU"));
         tblClmUPC.setCellValueFactory(new PropertyValueFactory<>("UPC"));
         tblClmAction.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record, Boolean>, ObservableValue<Boolean>>() {
@@ -244,7 +248,6 @@ public class InventoryController implements Initializable {
                 return new SimpleBooleanProperty(p.getValue() != null);
             }
         });
-
         //Adding the Button to the cell
         tblClmAction.setCellFactory(
                 new Callback<TableColumn<Record, Boolean>, TableCell<Record, Boolean>>() {
@@ -363,7 +366,10 @@ public class InventoryController implements Initializable {
                         Product currentProduct = (Product) ButtonCell.this.getTableView().getItems().get(ButtonCell.this.getIndex());
                         tfItemName.setText(currentProduct.getName());
                         taDescription.setText(currentProduct.getDescription());
+                        tfCategory.setText(currentProduct.getCategory());
+                        //Turned off, client requested it
                         tfCostPrice.setText(currentProduct.getCostPrice().toString());
+                        tfSize.setText(currentProduct.getCostPrice().toString());
                         tfUnitPrice.setText(currentProduct.getUnitPrice().toString());
                         tfQuantity.setText(currentProduct.getQuantity().toString());
                         tfReorderPoint.setText(currentProduct.getReorderLevel().toString());
@@ -376,26 +382,19 @@ public class InventoryController implements Initializable {
                         Product currentProduct = (Product) ButtonCell.this.getTableView().getItems().get(ButtonCell.this.getIndex());
                         tfItemName.setText(currentProduct.getName());
                         taDescription.setText(currentProduct.getDescription());
+                        tfCategory.setText(currentProduct.getCategory());
+                        //Turned off, client requested it
                         tfCostPrice.setText(currentProduct.getCostPrice().toString());
+                        tfSize.setText(currentProduct.getCostPrice().toString());
                         tfUnitPrice.setText(currentProduct.getUnitPrice().toString());
                         tfQuantity.setText(currentProduct.getQuantity().toString());
                         tfReorderPoint.setText(currentProduct.getReorderLevel().toString());
                         tfItemNumber.setText(currentProduct.getProductId().toString());
                     }
-//                        splitPane.getItems().add(1, bpRightAnchor);
-//                        splitPane.setDividerPosition(1, 0.8);
-//                    Product currentProduct = (Product) ButtonCell.this.getTableView().getItems().get(ButtonCell.this.getIndex());
-//                    tfItemName.setText(currentProduct.getName());
-//                    currentProduct.setQuantity(Integer.parseInt(showDialog()));
-//                    tableItems.remove(currentProduct);
-////                    saleItems.remove(currentProduct.getProductId());
-//                    tableItems.add(currentProduct);
-//                    calcSubTotal();
-
                 }
             });
 
-            //Action when the button is pressed
+            //Action when delete button is pressed
             deleteButton.setOnAction(new EventHandler<ActionEvent>() {
 
                 @Override
@@ -403,12 +402,14 @@ public class InventoryController implements Initializable {
                     // get Selected Item
                     Product currentProduct = (Product) ButtonCell.this.getTableView().getItems().get(ButtonCell.this.getIndex());
 
-//                    saleItems.remove(currentProduct.getProductNumber());
-//                    tableItems.remove(currentProduct);
-//                    if (saleItems.isEmpty()) {
-//                        reSetItems();
-//                    }
-//                    reSetItems();
+                    try {
+                        ProductManager.deleteProduct(currentProduct.getProductId());
+                        tableData.clear();
+                        tableData.addAll(ProductManager.getProductsList());
+                        tblInventory.setItems(tableData);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }

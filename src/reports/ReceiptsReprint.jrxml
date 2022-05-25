@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReceiptsReprint" pageWidth="226" pageHeight="425" columnWidth="186" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7fe3b8d9-8962-41cb-b27b-0c2e974056b4">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="mm"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="mm"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="mm"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="productName" class="java.lang.String">
+		<fieldDescription><![CDATA[productName]]></fieldDescription>
+	</field>
+	<field name="unitPrice" class="java.lang.Double">
+		<fieldDescription><![CDATA[unitPrice]]></fieldDescription>
+	</field>
+	<field name="quantityBought" class="java.lang.Integer">
+		<fieldDescription><![CDATA[quantityBought]]></fieldDescription>
+	</field>
+	<field name="ticketNumber" class="java.lang.String">
+		<fieldDescription><![CDATA[ticketNumber]]></fieldDescription>
+	</field>
+	<field name="receiptDate" class="java.lang.String"/>
+	<field name="amountPaid" class="java.lang.Double">
+		<fieldDescription><![CDATA[amountPaid]]></fieldDescription>
+	</field>
+	<field name="change" class="java.lang.Double">
+		<fieldDescription><![CDATA[change]]></fieldDescription>
+	</field>
+	<variable name="sumofLine" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{unitPrice}*$F{quantityBought}]]></variableExpression>
+	</variable>
+	<variable name="sumTotal" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$V{sumofLine}]]></variableExpression>
+	</variable>
+	<group name="sales">
+		<groupFooter>
+			<band height="56">
+				<staticText>
+					<reportElement stretchType="RelativeToTallestObject" x="84" y="4" width="64" height="12" uuid="cce78a3d-1935-4d6d-80bb-3b6481c3dfb8"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Sub Total:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement stretchType="RelativeToTallestObject" x="84" y="16" width="64" height="12" uuid="3d29797d-692f-44bb-aeac-03281d30b925"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement stretchType="RelativeToTallestObject" x="84" y="30" width="64" height="12" uuid="9fc8d53a-b971-4194-83ea-06fa725e7619"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cash:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="84" y="44" width="64" height="12" uuid="ac3ddb83-fdf4-468e-9fd5-52332ee3debe"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Balance:]]></text>
+				</staticText>
+				<line>
+					<reportElement x="105" y="29" width="80" height="1" forecolor="#CCCCCC" uuid="46d8ee47-e339-4a29-b4d3-f2ae3f5fbd8c"/>
+				</line>
+				<line>
+					<reportElement x="105" y="43" width="80" height="1" forecolor="#CCCCCC" uuid="1cc1f5cc-da55-438f-9b2e-3bcbb396ecad"/>
+				</line>
+				<textField isStretchWithOverflow="true">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="150" y="45" width="34" height="11" uuid="76d4585a-57cb-4ca6-aafc-91b57f2c38b2"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{change}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="150" y="32" width="34" height="12" uuid="4605c852-acd6-4fe5-aa1c-9e352c5d4856"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{amountPaid}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="150" y="17" width="34" height="12" uuid="7cbfb4da-7be6-4754-8c8d-8dded4327bb7"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumTotal}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="43" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="29" width="42" height="12" uuid="83c56018-0cfa-418c-819b-bd092fb6dc1d"/>
+				<textElement textAlignment="Left">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Receipt No.:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="44" y="29" width="70" height="12" uuid="a94b35c5-c5a2-452b-be2f-3eef44aad9bb"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ticketNumber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="17" width="60" height="12" uuid="8be0584b-0203-434a-b10b-f5c48f84a407"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{receiptDate}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="41" width="186" height="1" uuid="8d55e980-4132-4c09-b377-2c686bfff41e"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="19" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="50" height="12" uuid="afb42772-b064-40f0-88be-2ee3ea24f8cf">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="eb7db06f-b362-41cb-9552-57a09f6ace45"/>
+				</reportElement>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Item Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="2" width="30" height="12" uuid="47f01568-6bca-43d6-82f8-927e7717518c">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bf4d3fb5-56ae-42c5-8f16-928e23587c7e"/>
+				</reportElement>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="2" width="32" height="12" uuid="acf57138-d07d-4791-b634-5e28402b50b8">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8ffcf09e-dcbf-4b9c-86be-4a86c1fd34e4"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Price]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="152" y="2" width="32" height="12" uuid="13105b81-91d2-4ef1-9c62-d3b5a3fbef42">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8ffcf09e-dcbf-4b9c-86be-4a86c1fd34e4"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="14" width="186" height="1" uuid="f0d85fc2-2a36-4721-98a4-b2840fc06701"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField>
+				<reportElement x="1" y="2" width="60" height="10" uuid="6c49dc2c-1879-441d-bb13-d79864c24603">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3e172bf7-601f-4740-b25c-ae390cf5ad9b"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="2" width="30" height="10" uuid="d5a261c2-43bf-4954-bf9b-7e839818cefd">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="67bd8f6b-1727-4b2c-be2d-76b8e0b788bf"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quantityBought}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="2" width="32" height="10" uuid="6beaaea7-6fe1-428c-b19f-009f07059c1d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e3cb50b5-783b-4ce1-a8bc-fd80cfd0ecb3"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{unitPrice}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="2" width="34" height="10" uuid="341316a8-07bd-40f4-b860-da2fa40927c3"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumofLine}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="13" width="186" height="1" forecolor="#CCCCCC" uuid="35ae768c-5ef8-425a-b7c3-85b6f918032c"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="55" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -9,20 +9,19 @@ import java.sql.Statement;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import beans.Product;
 import beans.Receipts;
 
 import database.ConnectionManager;
 
 public class ReceiptsManager {
-    private static Connection               conn = ConnectionManager.getConnection();
+    private static Connection conn = ConnectionManager.getInstance().getConnection();
     private static ObservableList<Receipts> product;
 
 //  }
     public static boolean insert(Receipts bean) throws Exception {
         String sql =
             "INSERT into receipts (customerId, employeeId, salesOutletId , modeOfPayment, ticketNumber, amountPaid, balance, receiptDate)"
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))";
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, SYSDATE())";
         ResultSet keys = null;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -41,7 +40,7 @@ public class ReceiptsManager {
                 keys.next();
 
                 int newKey = keys.getInt(1);
-
+                System.out.println("A new  receipt!" + newKey);
                 bean.setReceiptId(newKey);
             } else {
                 System.err.println("No rows affected");

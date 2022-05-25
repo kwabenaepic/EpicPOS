@@ -11,7 +11,7 @@ import beans.Staff;
 
 public class StaffManager {
 
-    private static Connection conn = ConnectionManager.getConnection();
+    private static Connection conn = ConnectionManager.getInstance().getConnection();
 
     public static void displayAllRows() throws SQLException {
 

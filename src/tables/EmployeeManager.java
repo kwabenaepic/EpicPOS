@@ -1,11 +1,5 @@
 package tables;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,13 +16,13 @@ import database.ConnectionManager;
 
 public class EmployeeManager {
 
-    private static Connection conn = ConnectionManager.getConnection();
+    private static Connection conn = ConnectionManager.getInstance().getConnection();
     private static ObservableList<Employee> employee;
 
     public static boolean insert(beans.Employee bean) throws Exception {
         String sql
-             = "INSERT into employee (firstName, lastName, phone, mobile, email, username, password, imagePath, image,"
-             + "address, city, securityGroup, enabled) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+             = "INSERT into employee (firstName, lastName, phone, mobile, email, username, password, "
+             + "address, city, securityGroup, enabled, employeeNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         ResultSet keys = null;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -38,37 +32,36 @@ public class EmployeeManager {
             stmt.setString(4, bean.getMobile());
             stmt.setString(5, bean.getEmail());
 
-//          stmt.setString(6, bean.getEmployeeId());
+//          stmt.setInt(6, bean.getEmployeeId());
             stmt.setString(6, bean.getUsername());
             stmt.setString(7, bean.getPassword());
-            stmt.setString(8, bean.getImagePath());
+//            stmt.setString(8, bean.getImagePath());
 
-            if (bean.getImagePath() != null) {
-                InputStream is;
+//            if (bean.getImagePath() != null) {
+//                InputStream is;
+//
+//                is = new FileInputStream(bean.getImagePath());
+//                stmt.setBlob(9, is);
+//            } else {
+//                stmt.setBlob(9, (Blob) null);
+//            }
 
-                is = new FileInputStream(bean.getImagePath());
-                stmt.setBlob(9, is);
-            } else {
-                stmt.setBlob(9, (Blob) null);
-            }
-
-            stmt.setString(11, bean.getAddress());
-            stmt.setString(12, bean.getCity());
-            stmt.setString(13, bean.getSecurityGroup());
-            stmt.setBoolean(14, bean.getEnabled());
+            stmt.setString(8, bean.getAddress());
+            stmt.setString(9, bean.getCity());
+            stmt.setString(10, bean.getSecurityGroup());
+            stmt.setBoolean(11, bean.getEnabled());
+            stmt.setInt(12, bean.getEmployeeId());
 
             int affected = stmt.executeUpdate();
 
             if (affected == 1) {
-                keys = stmt.getGeneratedKeys();
-                keys.next();
-
-                int newKey = keys.getInt(1);
-
-                bean.setEmployeeNumber(newKey);
+//                keys = stmt.getGeneratedKeys();
+//                keys.next();
+//
+//                int newKey = keys.getInt(1);
+//                bean.setEmployeeId(newKey);
             } else {
                 System.err.println("No rows affected");
-
                 return false;
             }
         } catch (SQLException e) {
@@ -132,6 +125,7 @@ public class EmployeeManager {
                 bean.setPassword(rs.getString("password"));
                 bean.setFirstName(rs.getString("firstName"));
                 bean.setLastName(rs.getString("lastName"));
+                bean.setSecurityGroup(rs.getString("securityGroup"));
                 bean.setEmail(rs.getString("email"));
                 bean.setMobile(rs.getString("mobile"));
                 bean.setPhone(rs.getString("phone"));
@@ -140,7 +134,7 @@ public class EmployeeManager {
             }
         } catch (SQLException e) {
 //            System.err.println(e.getMessage());
-            System.out.println(e.getMessage());
+//            System.out.println(e.getMessage());
         }
         return bean;
     }
@@ -183,6 +177,30 @@ public class EmployeeManager {
             return employeeList;
         }
     }
+
+    public static boolean deleteEmployee(int id) throws SQLException {
+
+        String sql = "delete FROM employee WHERE id = ?";
+
+        try (
+                PreparedStatement stmt = conn.prepareStatement(sql);) {
+            stmt.setInt(1, id);
+            int affected = stmt.executeUpdate();
+
+            if (affected == 1) {
+                return true;
+            } else {
+                System.err.println("No rows affected");
+                return false;
+            }
+
+        } catch (SQLException e) {
+            System.err.println(e);
+            return false;
+        }
+
+    }
+
 
 //  public static boolean update(Employee bean) throws Exception {
 //

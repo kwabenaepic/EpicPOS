@@ -7,6 +7,7 @@ import epicpos.Main;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
@@ -23,7 +24,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -31,13 +31,13 @@ import net.sf.jasperreports.engine.design.JRDesignQuery;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
+import org.controlsfx.control.Notifications;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.AutoCompletionBinding.AutoCompletionEvent;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.dialog.ProgressDialog;
-import tables.ProductManager;
-import tables.SaleItemsManager;
+import tables.*;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
@@ -58,8 +58,10 @@ import java.util.logging.Logger;
 // * @author KwabenaEpic
 // */
 public class PosClientController implements Initializable {
-
+    @FXML
+    private Button btnTenderMomo;
     private Integer employeeId;
+    private String securityGroup;
 
 //    ObservableList<String> entries = FXCollections.observableArrayList();
     @FXML
@@ -70,6 +72,10 @@ public class PosClientController implements Initializable {
     private TableColumn<Product, Integer> quantityColumn;
     @FXML
     private TableColumn<Product, Integer> itemIdColumn;
+    @FXML
+    private TableColumn<Product, String> descriptionColumn;
+    @FXML
+    private TableColumn<Product, String> sizeColumn;
 
     private ObservableList<Product> data, tableItems;
 
@@ -139,6 +145,7 @@ public class PosClientController implements Initializable {
     private Button btndashboard;
 
     SimpleDoubleProperty getBalance = new SimpleDoubleProperty();
+    private Business businessData ;
 
     private Alert alert = null;
     Task copyWorker;
@@ -148,6 +155,11 @@ public class PosClientController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        try {
+            businessData = BusinessManager.getCompanyInfo();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 //        Thread thread = new Thread(new Runnable() {
 //            @Override
 //            public void run() {
@@ -155,12 +167,7 @@ public class PosClientController implements Initializable {
 //
 //                    @Override
 //                    public void run() {
-//                        Boolean status = ConnectionManager.getInstance().getConnectionStatus();
-//                        if (status == false) {
-////                           application.gotoProgressForm();
-//                            isValidCondition();
-//                            System.out.println("Connection Lost");
-//                        }
+//
 //                    }
 //                };
 //
@@ -178,6 +185,8 @@ public class PosClientController implements Initializable {
 //        //don't let thread prevent JVM shutdown
 //        thread.setDaemon(true);
 //        thread.start();
+
+
         try {
             this.ip = InetAddress.getLocalHost();
 //            System.out.println(ip.getHostName());
@@ -187,7 +196,8 @@ public class PosClientController implements Initializable {
         currentTicket = ticketGenerator();
         ticketNumberLbl.setText(currentTicket + "");
         btnTenderCash.setDisable(true);
-        btnTenderCard.setDisable(false);
+        btnTenderCard.setDisable(true);
+        btnTenderMomo.setDisable(true);
         btnCheckout.setDisable(true);
         disPlayDateTime();
         displayDate();
@@ -236,7 +246,7 @@ public class PosClientController implements Initializable {
         clock.setCycleCount(Animation.INDEFINITE);
         clock.play();
     }
-
+// get inventory items to search textfield
     private void importItemsToSearch() {
         data = FXCollections.observableArrayList();
         tableItems = FXCollections.observableArrayList();
@@ -245,14 +255,18 @@ public class PosClientController implements Initializable {
 //            ProductManager.getProductsList();
             data = ProductManager.getProductsList();
             for (Product next : data) {
-                entries.add(next.getName().concat(" ").concat(next.getUnitPrice().toString()).concat(" ").concat((next.getProductId().toString())));
-//                entries.add(next.getDescription().concat(" ").concat(next.getUnitPrice().toString()).concat(" ").concat(Integer.parseInt(next.getProductId())));
+                // add product description to search field items
+                entries.add(next.getName().concat(" ").concat(next.getDescription().concat(" ").concat(next.getSize().concat(" ")).concat(next.getUnitPrice().toString()).concat(" ").concat((next.getProductId().toString()))));
+
+                //Working
+//              entries.add(next.getName().concat(" ").concat(next.getDescription().concat(" ").concat(next.getUnitPrice().toString()).concat(" ").concat((next.getProductId().toString()))));
+//
+//                entries.add(next.getName().concat(" ").concat(next.getUnitPrice().toString()).concat(" ").concat((next.getProductId().toString())));
+//
             }
         } catch (SQLException ex) {
             Logger.getLogger(PosClientController.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        searchField.setItems(entries);
-//        aux = new AutoCompleteComboBoxListener(searchField);
     }
 
     public void displayDate() {
@@ -272,8 +286,6 @@ public class PosClientController implements Initializable {
         double quant = rowList.getQuantity();
         double result = price * quant;
         this.qty += result;
-//        subTotalLbl.setText(qty + "");
-//        lblTotal.setText(qty + "");
         saleItems.put(rowList.getProductId(), result);
         reSetItems();
     }
@@ -308,6 +320,8 @@ public class PosClientController implements Initializable {
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
             qty = result.get();
+        } else {
+            tfFieldSearch.setText("");
         }
         return qty;
     }
@@ -325,20 +339,15 @@ public class PosClientController implements Initializable {
             qty = result.get();
         }
         amountPaid = new BigDecimal(qty);
-//        lblAmountPaid.setText(Double.parseDouble(qty) + "");
-//        btnCheckout.setDisable(false);
         return qty;
     }
 
     public static int ticketGenerator() {
-        // Usually this can be a field rather than a method variable
         Random rand = new Random();
-        // nextInt is normally exclusive of the top value,
-        // so add 1 to make it inclusive
-        return rand.nextInt((10000 - 1) + 1) + 1;
+        return rand.nextInt((100000 - 1) + 1) + 1;
     }
 
-    private void enterReceipts() {
+    private void enterReceipts() throws Exception {
         Receipts bean = new Receipts();
         bean.setEmployeeId(employeeId);
         bean.setTicketNumber(currentTicket + "");
@@ -347,15 +356,21 @@ public class PosClientController implements Initializable {
         bean.setModeOfPayment(tenderType);
         bean.setAmountPaid(Double.parseDouble(lblAmountPaid.getText()));
         bean.setBalance(roundToTwoPlaces(Double.parseDouble(lblBalance.getText())));
+        boolean result = ReceiptsManager.insert(bean);
+        if (result) {
+        }
 
     }
 
-    private void updateInventoryQty() {
+    private void updateInventoryQty() throws Exception {
         Product bean = new Product();
         for (Product model : tableItems) {
             bean.setQuantity(model.getQuantity());
             bean.setProductId(model.getProductId());
-
+            boolean result = ProductManager.updateItemQuntityOnSale(bean);
+            if (result) {
+//                System.out.println("Product " + bean.getProductId() + " qty was reduced by !");
+            }
         }
     }
 
@@ -376,6 +391,8 @@ public class PosClientController implements Initializable {
     private void configureTable() {
         itemIdColumn.setCellValueFactory(new PropertyValueFactory<>("productId"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        sizeColumn.setCellValueFactory(new PropertyValueFactory<>("size"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         actionColumn.setCellValueFactory(p -> new SimpleBooleanProperty(p.getValue() != null));
@@ -402,7 +419,7 @@ public class PosClientController implements Initializable {
             beanSaleItem.setProductName(model.getName() + " @ " + (model.getUnitPrice()));
             beanSaleItem.setQuantityBought(model.getQuantity());
             beanSaleItem.setUnitPrice(model.getUnitPrice() * model.getQuantity());
-//            beanSaleItem.setUnitPrice(Double.parseDouble(subTotalLbl.getText()));
+            beanSaleItem.setUnitPrice(Double.parseDouble(subTotalLbl.getText()));
             beanSaleItem.setTicketNumber(currentTicket + "");
             beanSaleItem.setReceiptDate(dateLocal.getText());
             beanSaleItem.setAmountPaid(Double.parseDouble(lblAmountPaid.getText()));
@@ -429,22 +446,27 @@ public class PosClientController implements Initializable {
     }
 
     public void showReport2(int ticketNumber) {
-        Connection conn = ConnectionManager.getConnection();
+        Map parameters = new HashMap();
+        parameters.put("companyName", businessData.getName());
+        parameters.put("location", businessData.getLocation());
+        parameters.put("mobile", businessData.getMobile());
+        parameters.put("address", businessData.getAddress());
+        Connection conn = ConnectionManager.getInstance().getConnection();
         try {
             JasperDesign jd = null;
             String sql = "SELECT * FROM productsbyticketnumber "
                     + "JOIN salereports on productsbyticketnumber.ticketNumber = salereports.ticketNumber "
                     + "WHERE productsbyticketnumber.ticketNumber = " + ticketNumber;
 
-            jd = JRXmlLoader.load("C:/Users/KwabenaEpic/Documents/NetBeansProjects/EpicPOS/src/reports/Receipts.jrxml");
+            jd = JRXmlLoader.load(getClass().getResourceAsStream("/reports/ReceiptsPOS.jrxml"));
             JRDesignQuery newQuery = new JRDesignQuery();
             newQuery.setText(sql);
             jd.setQuery(newQuery);
 
             JasperReport jr = JasperCompileManager.compileReport(jd);
-            JasperPrint jp = JasperFillManager.fillReport(jr, null, conn);
-            JasperViewer.viewReport(jp, false);
-            JasperPrintManager.printReport(jp, true);
+            JasperPrint jp = JasperFillManager.fillReport(jr, parameters, conn);
+//            JasperViewer.viewReport(jp, false);
+            JasperPrintManager.printReport(jp, false);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -457,7 +479,7 @@ public class PosClientController implements Initializable {
         enterReceipts();
         enterSaleItems();
         updateInventoryQty();
-        showReport();
+        showReport2(Integer.parseInt(ticketNumberLbl.getText()));
         prepAnotherSale();
     }
 
@@ -474,6 +496,14 @@ public class PosClientController implements Initializable {
     }
 
     private void prepAnotherSale() {
+        Notifications notification = Notifications.create()
+                .hideAfter(Duration.seconds(6))
+//                .title("New Sale")
+                .text("Make a New Sale!")
+                .graphic(null)
+                .darkStyle()
+                .position(Pos.CENTER);
+        notification.show();
         subTotalLbl.setText("");
         taxLbl.setText("");
         lblBalance.setText("");
@@ -486,6 +516,7 @@ public class PosClientController implements Initializable {
         table.getItems().clear();
         btnCheckout.setDisable(true);
         btnTenderCash.setDisable(true);
+
     }
 
     @FXML
@@ -546,7 +577,22 @@ public class PosClientController implements Initializable {
     @FXML
     private void btndashboardOnAction(ActionEvent event) {
 //        this.application = application;
-        application.gotoDashboard();
+        if (securityGroup.equals("Manager")) {
+            application.gotoDashboard();
+        } else {
+            Notifications notification = Notifications.create()
+                    .hideAfter(Duration.seconds(6))
+//                .title("New Sale")
+                    .text("You do not have Authorization!")
+                    .graphic(null)
+                    .darkStyle()
+                    .position(Pos.CENTER);
+            notification.show();
+        }
+
+    }
+
+    public void btnTenderMomoOnAction(ActionEvent actionEvent) {
     }
 
     //Define the button cell
@@ -611,6 +657,7 @@ public class PosClientController implements Initializable {
         this.application = application;
         Employee loggedUser = application.getLoggedUser();
         employeeId = loggedUser.getEmployeeId();
+        securityGroup = loggedUser.getSecurityGroup();
         staffNameLbl.setText(loggedUser.getFirstName() + " " + loggedUser.getLastName());
         if (loggedUser.getImage() != null) {
             ByteArrayInputStream byteArrayInputStream = null;
@@ -621,9 +668,9 @@ public class PosClientController implements Initializable {
                 Logger.getLogger(PosClientController.class
                         .getName()).log(Level.SEVERE, null, ex);
             }
-            ivUserImage.setImage(new Image(byteArrayInputStream));
+//            ivUserImage.setImage(new Image(byteArrayInputStream));
         } else {
-            ivUserImage.setImage(null);
+//            ivUserImage.setImage(null);
         }
     }
 

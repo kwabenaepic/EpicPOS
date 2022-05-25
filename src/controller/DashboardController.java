@@ -4,8 +4,8 @@ package controller;
 
 import beans.Employee;
 import epicpos.Main;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+
+import java.io.*;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.Format;
@@ -23,6 +23,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -33,6 +35,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 /**
@@ -46,7 +52,7 @@ public class DashboardController implements Initializable {
     private Button btnHome;
     @FXML
     private StackPane holderPane;
-    AnchorPane home, inventory, employees, sales, reports, widgets, controls, stockSummaryAmbient, meterReconciliation, settings;
+    AnchorPane about, home, inventory, employees, sales, reports, widgets, controls, stockSummaryAmbient, meterReconciliation, settings;
     @FXML
     private AnchorPane acMain;
     @FXML
@@ -62,7 +68,7 @@ public class DashboardController implements Initializable {
     @FXML
     private AnchorPane acHead;
     private Label lblUsrNamePopOver;
-    private Label lblFullName;
+//    private Label lblFullName;
     private Label lblUsrName;
     @FXML
     private Label lblUserId;
@@ -81,6 +87,7 @@ public class DashboardController implements Initializable {
     private Button btnInventory;
     @FXML
     private Button btnEmployees;
+    @FXML
     private ImageView ivUserImage;
 //    private Employee loggedUser;
     @FXML
@@ -114,6 +121,7 @@ public class DashboardController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         disPlayDateTime();
         displayDate();
         try {
@@ -123,6 +131,7 @@ public class DashboardController implements Initializable {
             sales = FXMLLoader.load(getClass().getResource("/view/SalesReports.fxml"));
             reports = FXMLLoader.load(getClass().getResource("/view/Reports.fxml"));
             settings = FXMLLoader.load(getClass().getResource("/view/Settings.fxml"));
+            about = FXMLLoader.load(getClass().getResource("/view/About.fxml"));
 //            meterReconciliation = FXMLLoader.load(getClass().getResource("/view/MeterReconciliation.fxml"));
 //            controls = FXMLLoader.load(getClass().getResource("/views/Controls.fxml"));
             setNode(home);
@@ -176,6 +185,32 @@ public class DashboardController implements Initializable {
 
     @FXML
     private void btnAboutOnClick(ActionEvent event) {
+//        setNode(about);
+        FXMLLoader fXMLLoader = new FXMLLoader();
+
+        fXMLLoader.setLocation(getClass().getResource("/view/About.fxml"));
+
+        // initializing the controller
+//      DailyStockReceiptsController dailystockReceiptsController = new DailyStockReceiptsController();
+//      fXMLLoader.setController(dailystockReceiptsController);
+        try {
+            fXMLLoader.load();
+
+            Parent parent = fXMLLoader.getRoot();
+            Scene scene = new Scene(parent);
+
+            scene.setFill(new Color(0, 0, 0, 0));
+
+//            AddEmployeeController addEmployeeController = fXMLLoader.getController();
+            Stage stage = new Stage();
+
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.show();
+        } catch (IOException ex) {
+            Logger.getLogger(AddEmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML
@@ -198,20 +233,22 @@ public class DashboardController implements Initializable {
         this.application = application;
 
         Employee loggedUser = application.getLoggedUser();
-        lblFullName.setText(loggedUser.getFirstName().concat(" " + loggedUser.getLastName()));
-        lblUsrName.setText(loggedUser.getFirstName());
-        lblUsrNamePopOver.setText(loggedUser.getFirstName());
-        if (loggedUser.getImage() != null) {
-            ByteArrayInputStream byteArrayInputStream = null;
-            try {
-                byteArrayInputStream = new ByteArrayInputStream(loggedUser.getImage().getBytes(1, (int) loggedUser.getImage().length()));
-            } catch (SQLException ex) {
-                Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            ivUserImage.setImage(new Image(byteArrayInputStream));
-        } else {
-            ivUserImage.setImage(null);
-        }
+        staffNameLbl.setText(loggedUser.getFirstName().concat(" " + loggedUser.getLastName()));
+//        lblFullName.setText(loggedUser.getFirstName().concat(" " + loggedUser.getLastName()));
+//        lblUsrName.setText(loggedUser.getFirstName());
+//        lblUsrNamePopOver.setText(loggedUser.getFirstName());
+//        if (loggedUser.getImage() != null) {
+//            ByteArrayInputStream byteArrayInputStream = null;
+//            try {
+////                byteArrayInputStream = new ByteArrayInputStream(loggedUser.getImage().getBytes(1, (int) loggedUser.getImage().length()));
+//            } catch (SQLException ex) {
+//                Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+////            ivUserImage.setImage(new Image(byteArrayInputStream));
+//        } else {
+//
+//          ivUserImage.setVisible(true);
+//        }
     }
 
     private void btnSwitchStockSummaryAmbient(ActionEvent event) {

@@ -13,19 +13,21 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="acContent" style="-fx-background-color: #EEEEEE;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SalesReportsController">
+<AnchorPane id="AnchorPane" fx:id="acContent" style="-fx-background-color: #EEEEEE;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SalesReportsController">
     <children>
         <BorderPane fx:id="bpRoot" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
             <bottom>
                 <HBox fillHeight="false" />
             </bottom>
             <center>
-                <SplitPane fx:id="splitPane" dividerPositions="0.7">
+                <SplitPane fx:id="splitPane" dividerPositions="0.3">
                     <items>
                         <TableView fx:id="tblSales" styleClass="tableAlignment" tableMenuButtonVisible="true">
                             <columns>
@@ -45,99 +47,118 @@
                         </TableView>
                         <AnchorPane fx:id="bpRightAnchor" maxWidth="450.0" minWidth="450.0" SplitPane.resizableWithParent="false">
                      <children>
-                        <VBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                        <VBox AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                            <children>
-                              <HBox alignment="CENTER">
+                              <GridPane>
+                                 <columnConstraints>
+                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="318.0" minWidth="10.0" prefWidth="318.0" />
+                                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="322.0" minWidth="122.0" prefWidth="122.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
                                  <children>
                                     <Label alignment="CENTER" style="-fx-font-size: 15; -fx-font-weight: bold;" text="Sale Item Details" />
-                                    <Region HBox.hgrow="ALWAYS" />
-                                    <Button fx:id="btnHide" mnemonicParsing="false" onAction="#btnHideOnAction" styleClass="btnTender" text="Hide Details" />
+                                    <Button fx:id="btnHide" mnemonicParsing="false" onAction="#btnHideOnAction" styleClass="btnTender" text="Hide Details" GridPane.columnIndex="1" />
+                                    <HBox GridPane.rowIndex="1">
+                                       <children>
+                                          <Label style="-fx-font-size: 14; -fx-font-weight: bold;" text="Date: ">
+                                             <HBox.margin>
+                                                <Insets right="10.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                          <Label fx:id="lblSaleItemDate" style="-fx-font-size: 14;" text="25/03/18" />
+                                       </children>
+                                    </HBox>
                                  </children>
-                                 <padding>
-                                    <Insets bottom="5.0" left="20.0" right="10.0" top="5.0" />
-                                 </padding>
-                              </HBox>
+                              </GridPane>
                               <Separator />
                               <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                 <children>
-                                    <Label style="-fx-font-size: 14;" text="Date: " />
-                                    <Label fx:id="lblSaleItemDate" style="-fx-font-size: 14;" text="25/03/18" />
-                                 </children>
                                  <padding>
                                     <Insets bottom="5.0" left="20.0" top="5.0" />
                                  </padding>
                               </HBox>
-                              <TableView fx:id="tblInventory" maxHeight="320.0" tableMenuButtonVisible="true">
+                              <TableView fx:id="tblInventory" maxWidth="1.7976931348623157E308" tableMenuButtonVisible="true">
                                  <columns>
-                                    <TableColumn fx:id="tblClmItemId" prefWidth="127.0" text="Item #" />
-                                    <TableColumn fx:id="tblClmItemName" prefWidth="145.0" text="Item Name" />
-                                    <TableColumn fx:id="tblClmDescription" prefWidth="145.0" text="Item Description" />
-                                    <TableColumn fx:id="tblClmQuantity" prefWidth="145.0" text="Qty" />
-                                    <TableColumn fx:id="tblClmUnitPrice" prefWidth="127.0" text="Unit Price" />
+                                    <TableColumn fx:id="tblClmItemId" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="Item #" />
+                                    <TableColumn fx:id="tblClmItemName" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="150.0" text="Item Name" />
+                                    <TableColumn fx:id="tblClmDescription" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" text="Item Description" />
+                                    <TableColumn fx:id="tblClmQuantity" maxWidth="-Infinity" minWidth="60.0" prefWidth="60.0" text="Qty" />
+                                    <TableColumn fx:id="tblClmUnitPrice" maxWidth="-Infinity" minWidth="60.0" prefWidth="60.0" text="Unit Price" />
                                  </columns>
                               </TableView>
-                              <HBox alignment="TOP_RIGHT" spacing="20.0">
+                              <HBox alignment="TOP_RIGHT">
                                  <children>
-                                    <VBox alignment="TOP_RIGHT" spacing="2.0">
+                                    <GridPane hgap="5.0">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" />
+                                        <ColumnConstraints hgrow="SOMETIMES" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
                                        <children>
                                           <Label alignment="CENTER_RIGHT" text="Sub total: " wrapText="true">
                                              <font>
                                                 <Font size="20.0" />
                                              </font>
                                           </Label>
-                                          <Label alignment="CENTER_RIGHT" text="Tax" wrapText="true">
+                                          <Label fx:id="subTotalLbl" text="0.0" GridPane.columnIndex="1">
                                              <font>
                                                 <Font size="20.0" />
                                              </font>
                                           </Label>
-                                          <Label text="Total" wrapText="true">
+                                          <Label alignment="CENTER_RIGHT" text="Tax" wrapText="true" GridPane.rowIndex="1">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="taxLbl" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label text="Total" wrapText="true" GridPane.rowIndex="2">
                                              <font>
                                                 <Font name="System Bold" size="20.0" />
                                              </font>
                                           </Label>
-                                          <Separator />
-                                          <Label alignment="CENTER_RIGHT" text="Cash Paid: " wrapText="true">
-                                             <font>
-                                                <Font size="15.0" />
-                                             </font>
-                                          </Label>
-                                          <Label alignment="CENTER_RIGHT" text="Change:" wrapText="true">
-                                             <font>
-                                                <Font size="15.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                    </VBox>
-                                    <VBox spacing="2.0">
-                                       <children>
-                                          <Label fx:id="subTotalLbl" text="0.0">
-                                             <font>
-                                                <Font size="20.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="taxLbl" text="0.0">
-                                             <font>
-                                                <Font size="20.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="lblTotal" text="0.0" wrapText="true">
+                                          <Label fx:id="lblTotal" text="0.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                              <font>
                                                 <Font name="System Bold" size="20.0" />
                                              </font>
                                           </Label>
-                                          <Separator />
-                                          <Label fx:id="lblAmountPaid" alignment="CENTER_RIGHT" text="0.0" wrapText="true">
+                                          <Label alignment="CENTER_RIGHT" text="Cash Paid: " wrapText="true" GridPane.rowIndex="4">
                                              <font>
                                                 <Font size="15.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="lblBalance" alignment="CENTER_RIGHT" text="0.0" wrapText="true">
+                                          <Label fx:id="lblAmountPaid" alignment="CENTER_RIGHT" text="0.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                              <font>
                                                 <Font size="15.0" />
                                              </font>
                                           </Label>
+                                          <Label alignment="CENTER_RIGHT" text="Change:" wrapText="true" GridPane.rowIndex="5">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="lblBalance" alignment="CENTER_RIGHT" text="0.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                          </Label>
+                                          <Separator GridPane.rowIndex="3" />
+                                          <Separator GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                        </children>
-                                    </VBox>
+                                    </GridPane>
+                                    <VBox spacing="2.0" />
                                  </children>
                                  <padding>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -146,7 +167,7 @@
                               <Separator prefWidth="200.0" />
                               <HBox alignment="TOP_RIGHT" layoutX="10.0" layoutY="486.0">
                                  <children>
-                                    <Button fx:id="btnReprintReceipt" mnemonicParsing="false" onAction="#btnReprintReceiptOnAction" prefHeight="50.0" prefWidth="150.0" styleClass="btnTender" text="Reprint">
+                                    <Button fx:id="btnReprintReceipt" mnemonicParsing="false" onAction="#btnReprintReceiptOnAction" prefHeight="50.0" styleClass="btnTender" text="Reprint">
                                        <font>
                                           <Font size="20.0" />
                                        </font></Button>
@@ -169,32 +190,25 @@
                     <children>
                         <Label style="-fx-font-size: 20; -fx-font-weight: bold;" text="Sales" />
                         <Separator prefHeight="4.0" prefWidth="1213.0" />
-                        <HBox spacing="10.0">
+                        <HBox alignment="TOP_RIGHT" maxWidth="1.7976931348623157E308" spacing="10.0">
                             <children>
                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                            <children>
-                              <Label text="Export To:" />
-                              <Button mnemonicParsing="false" onAction="#btnExportPdfOnAction" prefWidth="102.0" style="-fx-content-display: left;" styleClass="btnTender" text="PDF" />
-                              <Button mnemonicParsing="false" onAction="#btnExportExcelOnAction" prefWidth="102.0" style="-fx-content-display: left;" styleClass="btnTender" text="Excel" />
+                              <Label maxWidth="1.7976931348623157E308" text="Export To:" />
+                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnExportPdfOnAction" style="-fx-content-display: left;" styleClass="btnTender" text="PDF" />
+                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnExportExcelOnAction" style="-fx-content-display: left;" styleClass="btnTender" text="Excel" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" spacing="5.0" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_RIGHT" spacing="5.0">
                            <children>
-                              <HBox alignment="CENTER_RIGHT" spacing="10.0">
-                                 <children>
-                                    <Label text="From:" />
-                                    <DatePicker fx:id="dpDateFrom" prefWidth="110.0" styleClass="btnTender" />
-                                    <Label text="To:" />
-                                    <DatePicker fx:id="dpDateTo" prefWidth="110.0" styleClass="btnTender" />
-                                    <Button fx:id="btnShowRange" mnemonicParsing="false" onAction="#btnShowRnangeOnAction" styleClass="btnTender" text="Show Range" />
-                                 </children>
-                                 <HBox.margin>
-                                    <Insets right="20.0" />
-                                 </HBox.margin>
-                              </HBox>
-                                      <ComboBox fx:id="cbDateRange" onAction="#cbDateRangeOnAction" prefWidth="150.0" promptText="Today" styleClass="btnTender" />
-                                      <TextField fx:id="tfSearch" onKeyReleased="#tfSearchOnKeyReleased" prefHeight="33.0" promptText="Search Sales .." />
-                                      <Button fx:id="btnRefresh" mnemonicParsing="false" onAction="#btnRefreshOnAction" prefHeight="31.0" prefWidth="31.0" />
+                              <Label maxWidth="1.7976931348623157E308" text="From:" />
+                              <DatePicker fx:id="dpDateFrom" maxWidth="1.7976931348623157E308" prefWidth="100.0" styleClass="btnTender" />
+                              <Label maxWidth="1.7976931348623157E308" text="To:" />
+                              <DatePicker fx:id="dpDateTo" maxWidth="1.7976931348623157E308" prefWidth="100.0" styleClass="btnTender" />
+                              <Button fx:id="btnShowRange" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnShowRnangeOnAction" styleClass="btnTender" text="Show Range" />
+                                      <ComboBox fx:id="cbDateRange" maxWidth="1.7976931348623157E308" onAction="#cbDateRangeOnAction" promptText="Today" styleClass="btnTender" />
+                                      <TextField fx:id="tfSearch" maxWidth="1.7976931348623157E308" onKeyReleased="#tfSearchOnKeyReleased" prefHeight="33.0" promptText="Search Sales .." />
+                                      <Button fx:id="btnRefresh" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnRefreshOnAction" prefHeight="33.0" prefWidth="33.0" />
                            </children>
                         </HBox>
                             </children>
@@ -212,5 +226,6 @@
     </children>
     <stylesheets>
         <URL value="@../css/Modena.css" />
+      <URL value="@../css/PosClient.css" />
     </stylesheets>
 </AnchorPane>

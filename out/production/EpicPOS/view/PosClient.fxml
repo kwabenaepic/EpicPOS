@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<!--<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>-->
+
 <?import java.lang.String?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
@@ -10,14 +11,15 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.effect.Lighting?>
-<?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.textfield.CustomTextField?>
@@ -31,67 +33,36 @@
             <top>
                 <HBox styleClass="hbox-header">
                     <children>
-                        <ImageView fx:id="ivUserImage" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" styleClass="ivUserImage" HBox.hgrow="ALWAYS">
-                            <effect>
-                                <Lighting>
-                                    <bumpInput>
-                                        <Shadow />
-                                    </bumpInput>
-                                    <light>
-                                        <!--<Light.Distant />-->
-                                    </light>
-                                </Lighting>
-                            </effect>
-                            <HBox.margin>
-                                <Insets left="8.0" />
-                            </HBox.margin>
-                        </ImageView>
-                        <VBox alignment="BOTTOM_LEFT">
-                            <children>
-                                <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#btnLogoutOnAction" style="-fx-background-color: transparent;" styleClass="ivUserImage">
-                                    <graphic>
-                                        <ImageView fitHeight="30.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                                            <image>
-                                                <Image url="@../images/lock.png" />
-                                            </image>
-                                        </ImageView>
-                                    </graphic>
-                                    <VBox.margin>
-                                        <Insets left="-8.0" />
-                                    </VBox.margin>
-                                </Button>
-                                <Label fx:id="staffNameLbl" alignment="BOTTOM_LEFT" styleClass="labelColor" text="Kwabena Epic" textFill="WHITE">
+                  <GridPane HBox.hgrow="ALWAYS">
+                    <columnConstraints>
+                      <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                                <Label fx:id="staffNameLbl" alignment="BOTTOM_LEFT" styleClass="labelColor" text="Kwabena Epic" textFill="WHITE" GridPane.rowIndex="1">
                                     <font>
                                         <Font size="18.0" />
                                     </font>
-                                    <VBox.margin>
-                                        <Insets top="-8.0" />
-                                    </VBox.margin>
                                 </Label>
-                            </children>
-                            <HBox.margin>
-                                <Insets left="5.0" />
-                            </HBox.margin>
-                        </VBox>
-                        <Region HBox.hgrow="ALWAYS" />
-                        <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
-                            <children>
-                                <Label styleClass="labelColor" text="Epic POS" textFill="#fffdfd">
+                                <Label style="-fx-font-size: 40;" styleClass="labelColor" text="EpicPOS" textFill="#fffdfd" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                     <font>
                                         <Font size="30.0" />
                                     </font>
+                           <padding>
+                              <Insets bottom="30.0" />
+                           </padding>
                                 </Label>
-                            </children>
-                        </VBox>
-                        <Region HBox.hgrow="ALWAYS" />
-                        <VBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
-                            <children>
-                                <Label fx:id="dateLocal" style="-fx-font-size: 18;" styleClass="labelColor" text="00 Dec 0000" textFill="WHITE">
+                                <Label fx:id="dateLocal" style="-fx-font-size: 18;" styleClass="labelColor" text="00 Dec 0000" textFill="WHITE" GridPane.columnIndex="2">
                                     <font>
                                         <Font size="20.0" />
                                     </font>
                                 </Label>
-                                <HBox alignment="CENTER_RIGHT" spacing="3.0">
+                                <HBox alignment="CENTER_RIGHT" spacing="3.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                     <children>
                                         <Label fx:id="lblHour" alignment="CENTER" style="-fx-font-size: 30;" styleClass="labelColor" text="0" textFill="WHITE">
                                             <font>
@@ -120,12 +91,25 @@
                                         </Label>
                                     </children>
                                 </HBox>
-                            </children>
-                            <HBox.margin>
-                                <Insets right="8.0" />
-                            </HBox.margin>
-                        </VBox>
+                        <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#btnLogoutOnAction" style="-fx-background-color: transparent;" styleClass="ivUserImage">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/lock.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     </children>
+                  </GridPane>
                     </children>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+               <padding>
+                  <Insets bottom="3.0" left="15.0" right="15.0" top="5.0" />
+               </padding>
                 </HBox>
             </top>
             <center>
@@ -135,17 +119,18 @@
                             <children>
                                 <VBox spacing="5.0" styleClass="hbox-detail" HBox.hgrow="ALWAYS">
                                     <children>
-                              <CustomTextField fx:id="tfFieldSearch" onAction="#fieldSearchOnAction" prefHeight="50.0" promptText="ENTER OR SCAN PRODUCT" VBox.vgrow="ALWAYS">
+                              <CustomTextField fx:id="tfFieldSearch" maxWidth="1.7976931348623157E308" onAction="#fieldSearchOnAction" prefHeight="50.0" promptText="ENTER OR SCAN PRODUCT" VBox.vgrow="ALWAYS">
                                  <font>
                                     <Font size="25.0" />
                                  </font>
                               </CustomTextField>
 
-                                        <TableView fx:id="table" styleClass="table-View" VBox.vgrow="ALWAYS">
+                                        <TableView fx:id="table" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" styleClass="table-View" VBox.vgrow="ALWAYS">
                                             <columns>
-                                                <TableColumn fx:id="itemIdColumn" text="Item £" />
+                                                <TableColumn fx:id="itemIdColumn" maxWidth="100.0" minWidth="80.0" prefWidth="100.0" text="Item £" />
                                                 <TableColumn fx:id="nameColumn" prefWidth="400.0" text="Item Name" />
-                                                <TableColumn text="Attribute" />
+                                                <TableColumn fx:id="descriptionColumn" text="Description" />
+                                    <TableColumn fx:id="sizeColumn" prefWidth="75.0" text="Size" />
                                                 <TableColumn fx:id="priceColumn" text="Price" />
                                                 <TableColumn fx:id="quantityColumn" text="Qty" />
                                                 <TableColumn fx:id="actionColumn" prefWidth="100.0" text="Action" />
@@ -203,13 +188,19 @@
                                                 <HBox spacing="20.0" />
                                     <HBox alignment="CENTER" layoutX="335.0" layoutY="10.0" spacing="10.0">
                                        <children>
-                                          <Button fx:id="btnTenderCash" mnemonicParsing="false" onAction="#btnTenderCashOnAction" prefHeight="70.0" prefWidth="150.0" styleClass="btnTender" text="Cash">
+                                          <Button fx:id="btnTenderCash" mnemonicParsing="false" onAction="#btnTenderCashOnAction" prefHeight="70.0" styleClass="btnTender" text="Cash">
                                              <font>
                                                 <Font size="40.0" />
                                              </font>
                                           </Button>
                                           <Separator orientation="VERTICAL" />
-                                          <Button fx:id="btnTenderCard" disable="true" mnemonicParsing="false" onAction="#btnTenderCardOnAction" prefHeight="70.0" prefWidth="150.0" styleClass="btnTender" text="Card">
+                                          <Button fx:id="btnTenderCard" disable="true" mnemonicParsing="false" onAction="#btnTenderCardOnAction" prefHeight="70.0" styleClass="btnTender" text="Card">
+                                             <font>
+                                                <Font size="40.0" />
+                                             </font>
+                                          </Button>
+                                          <Separator orientation="VERTICAL" />
+                                          <Button fx:id="btnTenderMomo" disable="true" mnemonicParsing="false" onAction="#btnTenderMomoOnAction" prefHeight="70.0" styleClass="btnTender" text="Momo">
                                              <font>
                                                 <Font size="40.0" />
                                              </font>
@@ -280,7 +271,7 @@
                 </AnchorPane>
             </center>
             <right>
-                <VBox alignment="CENTER_RIGHT" prefWidth="400.0" styleClass="background">
+                <VBox alignment="CENTER_RIGHT" styleClass="background">
                     <children>
                   <HBox>
                      <children>
@@ -318,67 +309,31 @@
                         </HBox>
                      </children>
                   </HBox>
-                        <Region prefHeight="138.0" prefWidth="260.0" VBox.vgrow="ALWAYS" />
+                        <Region maxWidth="-Infinity" prefHeight="138.0" prefWidth="260.0" VBox.vgrow="ALWAYS" />
                         <VBox alignment="CENTER_RIGHT" spacing="10.0">
                             <children>
-                                <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="ALWAYS" />
-                                <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="ALWAYS">
-                                    <children>
-                                        <Button mnemonicParsing="false" prefHeight="112.0" prefWidth="133.0" style="-fx-content-display: top; -fx-text-fill: black; -fx-font-size: 20;" styleClass="bevel-grey" text="Setup">
-                                 <graphic>
-                                    <FontAwesomeIconView fill="#ff9900" glyphName="COG" scaleX="2.0" scaleY="2.0" />
-                                 </graphic>
-                                        </Button>
-                                        <Button contentDisplay="TOP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="112.0" prefWidth="133.0" style="-fx-content-display: top; -fx-font-size: 20;" styleClass="bevel-grey" text="hello">
-                                 <graphic>
-                                    <FontAwesomeIconView fill="#ff9900" glyphName="HOME" scaleX="2.0" scaleY="2.0" />
-                                 </graphic>
-                                        </Button>
-                                        <Button fx:id="btndashboard" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#btndashboardOnAction" prefHeight="112.0" prefWidth="133.0" style="-fx-content-display: top; -fx-text-fill: black; -fx-font-size: 20;" styleClass="bevel-grey" text="Dashboard">
-                                 <graphic>
-                                    <FontIcon fill="#ff9900" iconLiteral="dashicons-dashboard" iconSize="40" />
-                                 </graphic>
-                                        </Button>
-                                    </children>
-                                </HBox>
-                                <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="ALWAYS">
-                                    <children>
-                                        <Button fx:id="btnClear" graphicTextGap="1.0" mnemonicParsing="false" onAction="#btnClearOnAction" prefHeight="100.0" prefWidth="133.0" style="-fx-content-display: top; -fx-text-fill: white; -fx-font-size: 20px;" text="Cancel" wrapText="true">
-                                 <graphic>
-                                    <FontIcon fill="WHITE" iconLiteral="dashicons-no" iconSize="40" />
-                                 </graphic>
-                                        </Button>
-                                        <Button fx:id="btnDiscount" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#btnDiscountOnAction" prefHeight="112.0" prefWidth="133.0" style="-fx-content-display: top; -fx-text-fill: white; -fx-text-fill: black; -fx-font-size: 20;" text="Discount">
-                                            <graphic>
-                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                                                    <image>
-                                                        <Image url="@../images/discount.png" />
-                                                    </image>
-                                                </ImageView>
-                                            </graphic>
-                                            <styleClass>
-                                                <String fx:value="bevel-grey" />
-                                                <String fx:value="allBtnHover" />
-                                            </styleClass>
-                                        </Button>
-                                        <Button fx:id="btnHoldSale" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#btnHoldSaleOnAction" prefHeight="112.0" prefWidth="133.0" style="-fx-content-display: top; -fx-text-fill: black; -fx-font-size: 20;" text="Hold">
-                                            <graphic>
-                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                                                    <image>
-                                                        <Image url="@../images/holdcart.png" />
-                                                    </image>
-                                                </ImageView>
-                                            </graphic>
-                                            <styleClass>
-                                                <String fx:value="bevel-grey" />
-                                                <String fx:value="allBtnHover" />
-                                            </styleClass>
-                                        </Button>
-                                    </children>
-                                </HBox>
+                                  <Button fx:id="btnClear" graphicTextGap="1.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnClearOnAction" style="-fx-content-display: top; -fx-text-fill: white; -fx-font-size: 20px;" text="Cancel" wrapText="true">
+                           <graphic>
+                              <FontIcon fill="WHITE" iconLiteral="dashicons-no" iconSize="40" />
+                           </graphic>
+                                  </Button>
+                                  <Button fx:id="btnDiscount" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnDiscountOnAction" style="-fx-content-display: top; -fx-text-fill: black; -fx-font-size: 20;" text="Settings">
+                                      <styleClass>
+                                          <String fx:value="bevel-grey" />
+                                          <String fx:value="allBtnHover" />
+                                      </styleClass>
+                           <graphic>
+                              <FontIcon fill="#ff9900" iconLiteral="dashicons-admin-tools" iconSize="40" />
+                           </graphic>
+                                  </Button>
+                        <Button fx:id="btndashboard" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btndashboardOnAction" style="-fx-content-display: top; -fx-text-fill: black; -fx-font-size: 20;" styleClass="bevel-grey" text="Dashboard">
+                           <graphic>
+                              <FontIcon fill="#ff9900" iconLiteral="dashicons-dashboard" iconSize="30" />
+                           </graphic>
+                        </Button>
                                 <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
                                     <children>
-                                        <Button fx:id="btnCheckout" mnemonicParsing="false" onAction="#checkout" prefHeight="125.0" prefWidth="400.0" styleClass="btnCheckout" HBox.hgrow="ALWAYS">
+                                        <Button fx:id="btnCheckout" mnemonicParsing="false" onAction="#checkout" prefHeight="125.0" styleClass="btnCheckout" HBox.hgrow="ALWAYS">
                                             <graphic>
                                                 <ImageView fitHeight="91.0" fitWidth="240.0" pickOnBounds="true" preserveRatio="true">
                                                     <image>

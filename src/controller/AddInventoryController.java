@@ -10,7 +10,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
@@ -79,6 +82,7 @@ public class AddInventoryController implements Initializable {
         bean.setCostPrice(Double.parseDouble(tfCostPrice.getText()));
         bean.setUnitPrice(Double.parseDouble(tfUnitPrice.getText()));
         bean.setQuantity(Integer.parseInt(tfQuantity.getText()));
+        bean.setSize(tfQuantity.getText());
         bean.setReorderLevel(Integer.parseInt(tfReorderPoint.getText()));
 
         try {
@@ -86,7 +90,7 @@ public class AddInventoryController implements Initializable {
             if (result == true) {
                 Notifications notification = Notifications.create()
                         .hideAfter(Duration.seconds(5))
-                        .title("Add Product")
+//                        .title("Add Product")
                         .text("Product Added Successfully!")
                         .graphic(null)
                         .darkStyle()
@@ -126,6 +130,7 @@ public class AddInventoryController implements Initializable {
         tfUnitPrice.setText("");
         tfCostPrice.setText("");
         tfQuantity.setText("");
+        tfSize.setText("");
         tfReorderPoint.setText("");
         tfUPC.setText("");
 

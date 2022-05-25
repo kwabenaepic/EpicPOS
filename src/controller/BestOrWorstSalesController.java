@@ -58,6 +58,8 @@ public class BestOrWorstSalesController implements Initializable {
     @FXML
     private TableColumn<ProductsInTransaction, String> tblClmDescription;
     @FXML
+    private TableColumn<ProductsInTransaction, String> tblClmSize;
+    @FXML
     private TableColumn<ProductsInTransaction, Integer> tblClmQuantity;
     @FXML
     private TableColumn<ProductsInTransaction, Double> tblClmUnitPrice;
@@ -100,6 +102,7 @@ public class BestOrWorstSalesController implements Initializable {
         tblClmItemId.setCellValueFactory(new PropertyValueFactory<>("productId"));
         tblClmItemName.setCellValueFactory(new PropertyValueFactory<>("productName"));
         tblClmDescription.setCellValueFactory(new PropertyValueFactory<>("productDescription"));
+        tblClmSize.setCellValueFactory(new PropertyValueFactory<>("size"));
         tblClmQuantity.setCellValueFactory(new PropertyValueFactory<>("quantityBought"));
         tblClmUnitPrice.setCellValueFactory(new PropertyValueFactory<>("total"));
 
@@ -181,7 +184,7 @@ public class BestOrWorstSalesController implements Initializable {
     }
 
     public void exportReportPdf() throws JRException, IOException {
-        String sourceFileName = ("src\\reports\\bestOrWorstSellers.jasper");
+        String sourceFileName = ("/reports/bestOrWorstSellers.jasper");
         ObservableList<ProductsInTransaction> beanSaleItemList = FXCollections.observableArrayList();
 
         for (ProductsInTransaction model : tableDataProduct) {

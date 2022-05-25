@@ -15,7 +15,7 @@ public class SaleItemsManager {
 
     private static ObservableList<SaleItems> salesTransaction;
 
-    private static Connection conn = ConnectionManager.getConnection();
+    private static Connection conn = ConnectionManager.getInstance().getConnection();
 
     public static ObservableList<SaleItems> getSaleItemsList() throws SQLException {
         ObservableList<SaleItems> saleitemsList = FXCollections.observableArrayList();

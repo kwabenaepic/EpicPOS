@@ -54,12 +54,12 @@
     -fx-text-fill: white;
 }
 .buttonMenu:hover{
-    -fx-background-image: url("../images/CoarseGrid.png");
+    /* -fx-background-image: url("../images/CoarseGrid.png");*/
     -fx-background-color:
         /*linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),*/
         linear-gradient(#20262b, #191d22),
         radial-gradient(center 30% 0%, radius 40%, rgba(114,131,148,0.9), rgba(255,255,255,0));
-    -fx-bottom-left: 5px solid #ff9900;
+    /*-fx-bottom-left: 5px solid #ff9900;*/
     -fx-effect: dropshadow( three-pass-box , #ff9900 , 0, 0, 4 , 0 );
     -fx-text-fill: #FFFFFF;
     /*        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
@@ -146,6 +146,14 @@
 
 }
 
+.hbox-header {
+    -fx-background-image: url("../images/CoarseGrid.png");
+    -fx-background-color:
+        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+        linear-gradient(#20262b, #191d22),
+           linear-gradient(rgba(255,255,255,0), rgba(114,131,148,1));
+
+}
 
 #sideMenuToogleBtn{
     -fx-padding: 0;
@@ -158,11 +166,11 @@
 
 }
 #acHead{
-    /*-fx-background-image: url("../images/CoarseGrid.png");*/
+    -fx-background-image: url("../images/CoarseGrid.png");
     -fx-background-color:
-        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+
         linear-gradient(#191d22, #20262b),
-        radial-gradient(center 30% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+        linear-gradient(rgba(255,255,255,0), rgba(114,131,148,1));
 
 }
 #acDashBord{

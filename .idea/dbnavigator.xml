@@ -27,15 +27,23 @@
     <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="0e675a2c-8e52-4383-b07c-795abbab20eb">
-      <console name="Connection" type="STANDARD" schema="mysql" session="Main" />
+    <connection id="794b70aa-a7e1-4dfe-b2be-8080c49ead5d">
+      <console name="Connection" type="STANDARD" schema="main" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="0e675a2c-8e52-4383-b07c-795abbab20eb" />
+    <connection id="794b70aa-a7e1-4dfe-b2be-8080c49ead5d" />
+  </component>
+  <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="794b70aa-a7e1-4dfe-b2be-8080c49ead5d" dataset="main.employeelogins" active-filter-id="EMPTY_FILTER">
+      <filter id="925c082f-cdda-47ef-bb21-161f54a33c0d" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="loginId" operator="=" value="" active="true" />
+      </filter>
+    </filter-actions>
+    <filter-actions connection-id="794b70aa-a7e1-4dfe-b2be-8080c49ead5d" dataset="main.employee" active-filter-id="" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
@@ -58,27 +66,33 @@
     <last-used-operator value="EQUAL" />
     <filters />
   </component>
+  <component name="DBNavigator.Project.ParserDiagnosticsManager">
+    <diagnostics-history />
+  </component>
   <component name="DBNavigator.Project.ScriptExecutionManager" clear-outputs="true">
     <recently-used-interfaces />
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="0e675a2c-8e52-4383-b07c-795abbab20eb" active="true">
+      <connection id="794b70aa-a7e1-4dfe-b2be-8080c49ead5d" active="true" signed="false">
         <database>
           <name value="Connection" />
           <description value="" />
-          <database-type value="MYSQL" />
+          <database-type value="SQLITE" />
           <config-type value="BASIC" />
-          <database-version value="5.7" />
+          <database-version value="3.34" />
           <driver-source value="BUILTIN" />
           <driver-library value="" />
           <driver value="" />
-          <url-type value="DATABASE" />
-          <host value="localhost" />
-          <port value="3306" />
-          <database value="mysql" />
-          <type value="USER" />
-          <user value="root" />
+          <url-type value="FILE" />
+          <host value="" />
+          <port value="" />
+          <database value="" />
+          <files>
+            <file path="C:\Users\AI\IdeaProjects\EpicPOS\src\database\posdata.db" schema="main" />
+          </files>
+          <type value="NONE" />
+          <user value="" />
           <deprecated-pwd value="" />
         </database>
         <properties>
@@ -104,10 +118,10 @@
           <charset value="UTF-8" />
           <session-management value="true" />
           <ddl-file-binding value="true" />
-          <database-logging value="false" />
+          <database-logging value="true" />
           <connect-automatically value="true" />
           <restore-workspace value="true" />
-          <restore-workspace-deep value="true" />
+          <restore-workspace-deep value="false" />
           <environment-type value="default" />
           <connectivity-timeout value="5" />
           <idle-time-to-disconnect value="30" />

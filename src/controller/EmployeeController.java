@@ -35,6 +35,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import tables.EmployeeManager;
+import tables.ProductManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -139,19 +140,14 @@ public class EmployeeController implements Initializable {
         fXMLLoader.setLocation(getClass().getResource("/view/AddEmployee.fxml"));
 
         // initializing the controller
-//      DailyStockReceiptsController dailystockReceiptsController = new DailyStockReceiptsController();
-//      fXMLLoader.setController(dailystockReceiptsController);
+
         try {
             fXMLLoader.load();
-
             Parent parent = fXMLLoader.getRoot();
             Scene scene = new Scene(parent);
-
             scene.setFill(new Color(0, 0, 0, 0));
-
             AddEmployeeController addEmployeeController = fXMLLoader.getController();
             Stage stage = new Stage();
-
             stage.setScene(scene);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initStyle(StageStyle.TRANSPARENT);
@@ -159,6 +155,7 @@ public class EmployeeController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(AddEmployeeController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     @FXML
@@ -171,8 +168,11 @@ public class EmployeeController implements Initializable {
     }
 
     @FXML
-    private void btnRefreshOnAction(ActionEvent event) {
-        tblEmployees.refresh();
+    private void btnRefreshOnAction(ActionEvent event) throws SQLException {
+        tableData.clear();
+        tableData.addAll(EmployeeManager.getEmployeesList());
+        tblEmployees.setItems(tableData);
+//        tblEmployees.refresh();
     }
 
     @FXML
@@ -188,7 +188,7 @@ public class EmployeeController implements Initializable {
     }
 
     private void configureTable() {
-        tblClmIEmployeeNumber.setCellValueFactory(new PropertyValueFactory<>("employeeNumber"));
+//        tblClmIEmployeeNumber.setCellValueFactory(new PropertyValueFactory<>("employeeNumber"));
         tblClmFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         tblClmLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         tblClmPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
@@ -343,16 +343,20 @@ public class EmployeeController implements Initializable {
                 public void handle(ActionEvent t) {
 
                     // get Selected Item
-                    Product currentProduct = (Product) ButtonCell.this.getTableView()
+                    Employee currentEmployee = (Employee) ButtonCell.this.getTableView()
                             .getItems()
                             .get(ButtonCell.this.getIndex());
 
-                    // saleItems.remove(currentProduct.getProductNumber());
-                    // tableItems.remove(currentProduct);
-                    // if (saleItems.isEmpty()) {
-                    // reSetItems();
-                    // }
-                    // reSetItems();
+
+
+                    try {
+                        EmployeeManager.deleteEmployee(currentEmployee.getEmployeeId());
+                        tableData.clear();
+                        tableData.addAll(EmployeeManager.getEmployeesList());
+                        tblEmployees.setItems(tableData);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }

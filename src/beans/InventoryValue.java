@@ -11,7 +11,48 @@ public class InventoryValue {
 
     private final IntegerProperty productId;
     private final StringProperty productName;
+
+    public String getDescription() {
+        return description.get();
+    }
+
+    public StringProperty descriptionProperty() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description.set(description);
+    }
+
+    public double getCostPrice() {
+        return costPrice.get();
+    }
+
+    public DoubleProperty costPriceProperty() {
+        return costPrice;
+    }
+
+    public void setCostPrice(double costPrice) {
+        this.costPrice.set(costPrice);
+    }
+
+    private final StringProperty description;
+
+    public String getSize() {
+        return size.get();
+    }
+
+    public StringProperty sizeProperty() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size.set(size);
+    }
+
+    private final StringProperty size;
     private final IntegerProperty quantity;
+    private final DoubleProperty costPrice;
     private final DoubleProperty unitPrice;
     private final DoubleProperty totalValue;
 
@@ -19,8 +60,11 @@ public class InventoryValue {
 
         this.productId = new SimpleIntegerProperty();
         this.productName = new SimpleStringProperty();
+        this.size = new SimpleStringProperty();
+        this.description = new SimpleStringProperty();
         this.quantity = new SimpleIntegerProperty();
         this.unitPrice = new SimpleDoubleProperty();
+        this.costPrice = new SimpleDoubleProperty();
         this.totalValue = new SimpleDoubleProperty();
     }
 

@@ -8,7 +8,10 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -40,75 +43,53 @@
                         <Insets bottom="10.0" left="20.0" right="20.0" />
                      </VBox.margin>
                                 </HBox>
-                  <HBox alignment="CENTER">
+                  <GridPane hgap="10.0" prefHeight="341.0" prefWidth="536.0" vgap="5.0">
+                     <columnConstraints>
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="246.0" minWidth="10.0" prefWidth="101.0" />
+                        <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="425.0" minWidth="10.0" prefWidth="321.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="246.0" minWidth="0.0" prefWidth="99.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
                      <children>
-                                    <VBox spacing="10.0">
-                                        <children>
-                                            <VBox alignment="TOP_RIGHT" spacing="20.0">
-                                                <children>
-                                                      <Label text="Description:">
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </Label>
-                                                      <Label text="Size: " />
-                                                      <Label text="Cost Price:" />
-                                                      <Label text="Unit Price:" />
-                                                      <Label text="Quantity:" />
-                                                      <Label text="UPC: " />
-                                    <Label text="SKU:" />
-                                    <Label text="Reorder Number: " />
-                                    <Label text="Vendor: " />
-                                                </children>
-                                 <VBox.margin>
-                                    <Insets right="10.0" />
-                                 </VBox.margin>
-                                 <padding>
-                                    <Insets top="14.0" />
-                                 </padding>
-                                            </VBox>
-                                        </children>
-                                    </VBox>
-                              <VBox prefHeight="540.0" prefWidth="354.0" spacing="10.0">
-                           <children>
-                              <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                 <children>
-                                    <TextField fx:id="taDescription" prefHeight="40.0" prefWidth="366.0" />
-                                    <Label style="-fx-text-fill: red; -fx-font-size: 20;" text="*" />
-                                 </children>
-                              </HBox>
-                                                <TextField fx:id="tfSize" prefHeight="40.0" prefWidth="150.0" />
-                              <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                 <children>
-                                                      <TextField fx:id="tfCostPrice" prefHeight="40.0" />
-                                    <Label style="-fx-text-fill: red; -fx-font-size: 20;" text="*" />
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                 <children>
-                                                      <TextField fx:id="tfUnitPrice" prefHeight="40.0" />
-                                    <Label style="-fx-text-fill: red; -fx-font-size: 20;" text="*" />
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                 <children>
-                                                      <TextField fx:id="tfQuantity" prefHeight="40.0" />
-                                    <Label style="-fx-text-fill: red; -fx-font-size: 20;" text="*" />
-                                 </children>
-                              </HBox>
-                                                <TextField fx:id="tfUPC" prefHeight="40.0" />
-                              <TextField fx:id="tfALU" prefHeight="40.0" />
-                              <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                 <children>
-                                    <TextField fx:id="tfReorderPoint" prefHeight="40.0" prefWidth="200.0" />
-                                    <Label style="-fx-text-fill: red; -fx-font-size: 20;" text="*" />
-                                 </children>
-                              </HBox>
-                              <ComboBox fx:id="cbVendor" prefHeight="40.0" prefWidth="200.0" />
-                           </children>
-                              </VBox>
+                        <Label text="Size: " GridPane.rowIndex="1" />
+                        <Label text="Description:" />
+                        <Label text="Cost Price:" GridPane.rowIndex="2" />
+                        <Label text="Unit Price:" GridPane.rowIndex="3" />
+                        <Label text="Quantity:" GridPane.rowIndex="4" />
+                        <Label text="UPC: " GridPane.rowIndex="5" />
+                        <Label text="SKU:" GridPane.rowIndex="6" />
+                        <Label text="Reorder Number: " GridPane.rowIndex="7" />
+                        <Label text="Vendor: " GridPane.rowIndex="8" />
+                        <TextField fx:id="taDescription" prefHeight="40.0" prefWidth="262.0" GridPane.columnIndex="1" />
+                        <TextField fx:id="tfSize" prefHeight="40.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="tfCostPrice" prefHeight="40.0" prefWidth="328.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="tfUnitPrice" prefHeight="40.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField fx:id="tfQuantity" prefHeight="40.0" prefWidth="288.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <TextField fx:id="tfUPC" prefHeight="40.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <TextField fx:id="tfALU" prefHeight="40.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <TextField fx:id="tfReorderPoint" prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                        <ComboBox fx:id="cbVendor" prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                        <Label style="-fx-text-fill: red; -fx-font-size: 20;" text="*" GridPane.columnIndex="2" />
+                        <Label style="-fx-text-fill: red; -fx-font-size: 20;" text="*" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Label style="-fx-text-fill: red; -fx-font-size: 20;" text="*" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Label style="-fx-text-fill: red; -fx-font-size: 20;" text="*" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <Label style="-fx-text-fill: red; -fx-font-size: 20;" text="*" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                        <Label style="-fx-text-fill: red; -fx-font-size: 20;" text="*" GridPane.columnIndex="2" GridPane.rowIndex="7" />
                      </children>
-                  </HBox>
+                     <VBox.margin>
+                        <Insets left="30.0" right="20.0" />
+                     </VBox.margin>
+                  </GridPane>
                </children>
                <VBox.margin>
                   <Insets top="10.0" />
@@ -116,8 +97,8 @@
             </VBox>
                 <HBox alignment="CENTER_RIGHT" spacing="20.0">
                     <children>
-                        <Button fx:id="btnSave" mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="70.0" prefWidth="150.0" styleClass="btnTender" text="Save" />
-                        <Button fx:id="btnCancel" disable="true" mnemonicParsing="false" onAction="#btnCancelOnAction" prefHeight="70.0" prefWidth="150.0" styleClass="btnTender" text="Cancel" />
+                        <Button fx:id="btnSave" mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="50.0" prefWidth="150.0" styleClass="btnTender" text="Save" />
+                        <Button fx:id="btnCancel" disable="true" mnemonicParsing="false" onAction="#btnCancelOnAction" prefHeight="50.0" prefWidth="150.0" styleClass="btnTender" text="Cancel" />
                     </children>
                     <VBox.margin>
                         <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />

@@ -23,7 +23,7 @@ import java.sql.SQLException;
  */
 public class SaleReportsManager {
 
-    private static Connection conn = ConnectionManager.getConnection();
+    private static Connection conn = ConnectionManager.getInstance().getConnection();
 
     public static ObservableList<SaleReports> getAllSaleReport() throws SQLException {
         ObservableList<SaleReports> saleReportsList = FXCollections.observableArrayList();
@@ -63,8 +63,8 @@ public class SaleReportsManager {
     public static ObservableList<SaleReports> getSaleportBetweenDateRange(String dateOne, String dateTwo)
             throws SQLException {
         ObservableList<SaleReports> saleReportsList = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM salereports " + "WHERE DATETIME(receiptDate)"
-                + "BETWEEN ? AND ?" + "ORDER BY receiptDate DESC ";
+        String sql = "SELECT * FROM salereports WHERE DATE(receiptDate) "
+                + "BETWEEN ? AND ? ORDER BY receiptDate DESC";
         ResultSet rs = null;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql);) {
@@ -94,9 +94,7 @@ public class SaleReportsManager {
 
     public static ObservableList<SaleReports> getSaleportForThisMonth(int month) throws SQLException {
         ObservableList<SaleReports> saleReportsList = FXCollections.observableArrayList();
-        String sql
-                = "SELECT * FROM salereports WHERE MONTH(receiptDate) = ? "
-                + "AND strftime('%m',receiptDate) = strftime('%y',DATETIME('now')) ORDER BY receiptDate DESC ";
+        String sql = "SELECT * FROM salereports WHERE MONTH(receiptDate) = ? and YEAR(receiptDate) = YEAR(now()) ORDER BY receiptDate DESC";
         ResultSet rs = null;
         try (PreparedStatement stmt = conn.prepareStatement(sql);) {
             stmt.setInt(1, month);
@@ -124,9 +122,7 @@ public class SaleReportsManager {
 
     public static ObservableList<SaleReports> getSaleportForThisWeek() throws SQLException {
         ObservableList<SaleReports> saleReportsList = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM salereports "
-                + "WHERE strftime('%W',receiptDate) = strftime('%W',DATETIME('now'))"
-                + "ORDER BY receiptDate DESC";
+        String sql = "SELECT * FROM salereports WHERE week(receiptDate) = week(now()) ORDER BY receiptDate DESC";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql);) {
             ResultSet rs = stmt.executeQuery();
@@ -155,7 +151,7 @@ public class SaleReportsManager {
         ObservableList<SaleReports> saleReportsList = FXCollections.observableArrayList();
 
 //      String sql = "SELECT * FROM salereport WHERE dateRange = ? ORDER BY DATE(date) asc";.
-        String sql = "SELECT * FROM salereports WHERE DATETIME(receiptDate) = DATETIME('now') ORDER BY receiptDate DESC ";
+        String sql = "SELECT * FROM salereports WHERE DATE(receiptDate) = CURDATE() ORDER BY receiptDate DESC";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql);) {
             ResultSet rs = stmt.executeQuery();
@@ -170,7 +166,7 @@ public class SaleReportsManager {
                 bean.setNumberOfItems(rs.getInt("numberOfItems"));
                 bean.setTotal(rs.getDouble("total"));
                 bean.setModeOfPayment(rs.getString("modeOfPayment"));
-//                bean.setEmployeeLastName(rs.getString("lastName"));
+                bean.setEmployeeLastName(rs.getString("lastName"));
                 bean.setAmountPaid(rs.getDouble("amountPaid"));
                 bean.setBalance(rs.getDouble("balance"));
                 saleReportsList.add(bean);
@@ -182,9 +178,7 @@ public class SaleReportsManager {
 
     public static ObservableList<SaleReports> getSaleportForYesterday() throws SQLException {
         ObservableList<SaleReports> saleReportsList = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM salereports "
-                + "WHERE DATETIME(receiptDate) = DATETIME('now') - INTERVAL 1 DAY "
-                + "ORDER BY receiptDate DESC ";
+        String sql = "SELECT * FROM salereports WHERE DATE(receiptDate) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) ORDER BY receiptDate DESC";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql);) {
             ResultSet rs = stmt.executeQuery();
@@ -210,8 +204,8 @@ public class SaleReportsManager {
     }
 
     public static Integer getSumItemsSoldForAMonth(int month) throws SQLException {
-        String sql = "select sum(numberOfItems) AS totalItemsSoldForToday "
-                + "FROM salereports where strftime('%m', receiptDate) = ? AND strftime('%y', receiptDate) =  DATETIME('%y','now')";
+        String sql = "Select sum(numberOfItems) AS totalItemsSoldForAMonth "
+                + "FROM salereports where MONTH(receiptDate) = ? AND YEAR(receiptDate) = YEAR(now())";
         ResultSet rs = null;
         Integer totalSalestoday = null;
 
@@ -239,6 +233,7 @@ public class SaleReportsManager {
 
                 bean.setProductId(rs.getString("productId"));
                 bean.setItemName(rs.getString("itemName"));
+                bean.setDescription(rs.getString("description"));
                 bean.setQuantityBought(rs.getString("quantityBought"));
                 getTopTenSellingList.add(bean);
             }
@@ -264,12 +259,12 @@ public class SaleReportsManager {
     }
 
     public static Double getTotalSalesForAMonth(int month) throws SQLException {
-        String sql = "select printf(\"%.2f\",SUM(total)) as totalSalesForAMonth "
-                + "FROM salereports where strftime('%m', receiptDate) = ? AND strftime('%y', receiptDate) = DATETIME('%y','now')";
+        String sql = "select (SUM(total)) as totalSalesForAMonth "
+                + "FROM salereports where MONTH(receiptDate) = ? AND YEAR(receiptDate) = YEAR(now())";
         ResultSet rs = null;
         Double totalSalesForAMonth = 0.0;
 //        System.out.println(sql);
-        try (PreparedStatement stmt = conn.prepareStatement(sql);) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, month);
             rs = stmt.executeQuery();
 
@@ -303,7 +298,7 @@ public class SaleReportsManager {
         String sql = "SELECT * from  totalsalestoday";
 
         ResultSet rs = null;
-        Double totalSalestoday = null;
+        Double totalSalestoday = 0.0;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql);) {
             rs = stmt.executeQuery();

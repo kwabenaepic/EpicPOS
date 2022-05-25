@@ -67,7 +67,6 @@ public class LoginController implements Initializable {
 
         try {
             this.ip = InetAddress.getLocalHost();
-
 //          System.out.println(ip.getHostName());
         } catch (UnknownHostException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
@@ -102,10 +101,10 @@ public class LoginController implements Initializable {
                     Format formatter;
                     Date date = new Date();
 
-                    formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    formatter = new SimpleDateFormat("YYYY-MM-DD");
                     timeStamp = formatter.format(date);
                     EmployeeLogins beans = new EmployeeLogins();
-                    beans.setDate(timeStamp);
+//                    beans.setDate(timeStamp);
                     beans.setUsername(bean.getUsername());
                     beans.setSessionId(ip.getHostName());
                     beans.setStatus(1);

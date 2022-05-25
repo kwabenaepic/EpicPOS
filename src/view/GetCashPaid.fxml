@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GetCashPaidController">
+<AnchorPane id="AnchorPane" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GetCashPaidController">
     <children>
         <VBox alignment="CENTER" layoutY="10.0" prefHeight="150.0" prefWidth="400.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -54,7 +54,7 @@
                 </HBox>
                 <HBox alignment="CENTER_RIGHT" spacing="20.0">
                     <children>
-                        <Button fx:id="btnOk" mnemonicParsing="false" onAction="#btnOkOnAction" prefHeight="30.0" prefWidth="125.0" text="Ok">
+                        <Button fx:id="btnOk" mnemonicParsing="false" onAction="#btnOkOnAction" prefHeight="30.0" prefWidth="125.0" styleClass="btnTender" text="Ok">
                      <font>
                         <Font size="20.0" />
                      </font></Button>
@@ -70,5 +70,6 @@
     <stylesheets>
         <URL value="@../css/Modena.css" />
         <URL value="@../css/PopUp.css" />
+      <URL value="@../css/PosClient.css" />
     </stylesheets>
 </AnchorPane>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Receipts" pageWidth="147" pageHeight="210" columnWidth="107" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8db6c242-ed8e-4d94-9b90-d6ab148c5cba">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
+	<property name="com.jaspersoft.studio.unit." value="mm"/>
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="134"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="479"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="521"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="mm"/>
+	<parameter name="ticketNumber" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT *
+FROM productsbyticketnumber
+join salereports
+on productsbyticketnumber.ticketNumber = salereports.ticketNumber
+WHERE
+	productsbyticketnumber.ticketNumber =  $P{ticketNumber}]]>
+	</queryString>
+	<field name="productName" class="java.lang.String">
+		<fieldDescription><![CDATA[productName]]></fieldDescription>
+	</field>
+	<field name="unitPrice" class="java.lang.Double">
+		<fieldDescription><![CDATA[unitPrice]]></fieldDescription>
+	</field>
+	<field name="quantityBought" class="java.lang.Integer">
+		<fieldDescription><![CDATA[quantityBought]]></fieldDescription>
+	</field>
+	<field name="ticketNumber" class="java.lang.String">
+		<fieldDescription><![CDATA[ticketNumber]]></fieldDescription>
+	</field>
+	<field name="receiptDate" class="java.lang.String"/>
+	<field name="amountPaid" class="java.lang.Double">
+		<fieldDescription><![CDATA[amountPaid]]></fieldDescription>
+	</field>
+	<field name="change" class="java.lang.Double">
+		<fieldDescription><![CDATA[change]]></fieldDescription>
+	</field>
+	<variable name="totalPrice" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{unitPrice}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="30" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="94" splitType="Immediate"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="17" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="12" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="80" splitType="Prevent"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="43" splitType="Stretch"/>
+	</summary>
+</jasperReport>

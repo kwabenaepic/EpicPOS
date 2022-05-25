@@ -34,20 +34,20 @@
                <items>
                       <TableView fx:id="tblEmployees" tableMenuButtonVisible="true" SplitPane.resizableWithParent="false">
                           <columns>
-                              <TableColumn fx:id="tblClmIEmployeeNumber" prefWidth="127.0" text="Employee #" />
+                              <TableColumn fx:id="tblClmEmployeeId" prefWidth="145.0" text="Employee Id" />
                               <TableColumn fx:id="tblClmFirstName" prefWidth="145.0" text="First Name" />
                               <TableColumn fx:id="tblClmLastName" prefWidth="145.0" text="Last Name" />
                               <TableColumn fx:id="tblClmPhone" prefWidth="145.0" text="Phone" />
                         <TableColumn fx:id="tblClmMobile" prefWidth="127.0" text="Mobile" />
                         <TableColumn fx:id="tblClmEnabled" prefWidth="127.0" text="Enabled" />
                               <TableColumn fx:id="tblClmEmail" prefWidth="145.0" text="Email" />
-                              <TableColumn fx:id="tblClmEmployeeId" prefWidth="145.0" text="Employee Id" />
                         <TableColumn fx:id="tblClmUsername" prefWidth="145.0" text="Username" />
                               <TableColumn fx:id="tblClmPassword" prefWidth="145.0" text="Password" />
                               <TableColumn fx:id="tblClmImagePath" prefWidth="145.0" text="Image Path" />
                         <TableColumn fx:id="tblClmAddress" prefWidth="127.0" text="Address" />
                         <TableColumn fx:id="tblClmCity" prefWidth="127.0" text="City" />
                         <TableColumn fx:id="tblClmSecurityGroup" prefWidth="127.0" text="Security Group" />
+                              <TableColumn fx:id="tblClmIEmployeeNumber" prefWidth="127.0" text="Employee #" />
                               <TableColumn fx:id="tblClmAction" prefWidth="106.0" text="Action" />
                           </columns>
       
@@ -276,5 +276,6 @@
     </children>
     <stylesheets>
         <URL value="@../css/Modena.css" />
+      <URL value="@../css/PosClient.css" />
     </stylesheets>
 </AnchorPane>

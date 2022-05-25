@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class ProductsInTransactionManager {
 
     private static ObservableList<ProductsInTransaction> product;
-    private static Connection conn = ConnectionManager.getConnection();
+    private static Connection conn = ConnectionManager.getInstance().getConnection();
 
     public static ObservableList<ProductsInTransaction> getProductsList(String ticketNumber) throws SQLException {
         ObservableList<ProductsInTransaction> productList = FXCollections.observableArrayList();
@@ -31,6 +31,7 @@ public class ProductsInTransactionManager {
                 bean.setProductId(rs.getInt("productId"));
                 bean.setProductName(rs.getString("productName"));
                 bean.setProductDescription(rs.getString("productDescription"));
+                bean.setSize(rs.getString("size"));
                 bean.setQuantityBought(rs.getInt("quantityBought"));
                 bean.setTicketNumber(rs.getString("ticketNumber"));
                 bean.setUnitPrice(rs.getDouble("unitPrice"));
@@ -60,6 +61,7 @@ public class ProductsInTransactionManager {
                 bean.setProductId(rs.getInt("productId"));
                 bean.setProductName(rs.getString("productName"));
                 bean.setProductDescription(rs.getString("productDescription"));
+                bean.setSize(rs.getString("size"));
                 bean.setQuantityBought(rs.getInt("quantityBought"));
                 bean.setTicketNumber(rs.getString("ticketNumber"));
                 bean.setUnitPrice(rs.getDouble("unitPrice"));

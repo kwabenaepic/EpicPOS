@@ -23,19 +23,19 @@ import javafx.collections.ObservableList;
  */
 public class EmployeeLoginsManager {
 
-    private static Connection conn = ConnectionManager.getConnection();
+    private static Connection conn = ConnectionManager.getInstance().getConnection();
 
-    public static boolean insertLogin(beans.EmployeeLogins bean) throws Exception {
-        String sql = "INSERT into employeelogins (date, username, sessionId, status, salesOutletId, loginTime)" + "VALUES (?, ?, ?, ?, ?, CURRENT_TIME)"
-                + "ON CONFLICT(username) DO UPDATE set status = status";
+    public static boolean insertLogin(EmployeeLogins bean) throws Exception {
+        String sql = "INSERT INTO employeelogins (date, username, sessionId, status, salesOutletId, loginTime) VALUES (date(now()), ?, ?, ?, ?, CURRENT_TIME)";
+//                + "ON CONFLICT(username) DO UPDATE set status = status";
         ResultSet keys = null;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setString(1, bean.getDate());
-            stmt.setString(2, bean.getUsername());
-            stmt.setString(3, bean.getSessionId());
-            stmt.setInt(4, bean.getStatus());
-            stmt.setString(5, bean.getSalesOutletId());
+//            stmt.setString(1, bean.getDate());
+            stmt.setString(1, bean.getUsername());
+            stmt.setString(2, bean.getSessionId());
+            stmt.setInt(3, bean.getStatus());
+            stmt.setString(4, bean.getSalesOutletId());
 //            ResultSet keys = null;
             int affected = stmt.executeUpdate();
 
@@ -44,11 +44,9 @@ public class EmployeeLoginsManager {
                 keys.next();
 
                 int newKey = keys.getInt(1);
-
                 bean.setLoginId(newKey);
             } else {
                 System.err.println("No rows affected");
-
                 return false;
             }
         } catch (SQLException e) {

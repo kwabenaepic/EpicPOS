@@ -1,1 +1,1 @@
-{"nDaysWithoutFine":0,"finePerDay":0.0,"companyName":"Campany Name","location":"Dunkwa On Offin","contactOne":"055000000","contactTwo":"024111111","address":"P. O. Box DN234, Dunkwa On Offine"}
+{"nDaysWithoutFine":0,"finePerDay":0.0,"companyName":"Pharmacy","location":"Dunkwa On Offin","contactOne":"055000000","contactTwo":"024111111","address":"P. O. Box DN234, Dunkwa On Offine"}

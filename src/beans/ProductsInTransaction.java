@@ -24,6 +24,20 @@ public class ProductsInTransaction {
     private final DoubleProperty unitPrice;
     private final IntegerProperty quantityBought;
     private final StringProperty ticketNumber;
+
+    public String getSize() {
+        return size.get();
+    }
+
+    public StringProperty sizeProperty() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size.set(size);
+    }
+
+    private final StringProperty size;
     private final StringProperty receiptDate;
     private final DoubleProperty amountPaid;
     private final DoubleProperty change;
@@ -153,6 +167,7 @@ public class ProductsInTransaction {
         this.productId = new SimpleIntegerProperty();
         this.productName = new SimpleStringProperty();
         this.productDescription = new SimpleStringProperty();
+        this.size = new SimpleStringProperty();
         this.unitPrice = new SimpleDoubleProperty();
         this.quantityBought = new SimpleIntegerProperty();
         this.ticketNumber = new SimpleStringProperty();

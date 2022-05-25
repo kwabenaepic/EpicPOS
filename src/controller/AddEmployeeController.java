@@ -13,12 +13,15 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 import tables.EmployeeManager;
 
 import javax.imageio.ImageIO;
@@ -27,6 +30,7 @@ import java.io.*;
 import java.net.URL;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -77,6 +81,8 @@ public class AddEmployeeController implements Initializable {
     File                           target, targetDir;
     Blob                           employeeImage;
 
+
+    byte [] data;
     @FXML
     private void btnCancelOnAction(ActionEvent event) {}
 
@@ -95,7 +101,6 @@ public class AddEmployeeController implements Initializable {
     @FXML
     private void btnUploadOnAction(ActionEvent event) throws SQLException {
         FileChooser fileChooser = new FileChooser();
-
         // Set extension filter
         FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
         FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
@@ -108,28 +113,24 @@ public class AddEmployeeController implements Initializable {
         if (file != null) {
             try {
                 BufferedImage bufferedImage = ImageIO.read(file);
-                Image         image         = SwingFXUtils.toFXImage(bufferedImage, null);
+                Image image = SwingFXUtils.toFXImage(bufferedImage, null);
 
+
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ImageIO.write(bufferedImage, "jpg", bos );
+                data = bos.toByteArray();
                 picBoxImageView.setImage(image);
                 tfUpload.setText(file.getAbsolutePath());
 
-//
-//              if (fis != null) {
-//                  picBoxImageView.setImage(image);
-////              Path movefrom = FileSystems.getDefault().getPath(selectedFile.getPath());
-//                  target = (file.getAbsoluteFile());
-//
-//                  System.out.println(getClass().getResource("/images"));
-////             targetDir = FileSystems.getDefault().getPath("userfiles/"+UNAME+"/"+ANAME);
-////            try{
-////              Files.move(movefrom,target,StandardCopyOption.ATOMIC_MOVE);
-////            }catch (IOException e){}
-//
-//              }
+
             } catch (IOException ex) {
                 Logger.getLogger(AddEmployeeController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    public static int ticketGenerator() {
+        Random rand = new Random();
+        return rand.nextInt((100000 - 1) + 1) + 1;
     }
 
     @FXML
@@ -158,8 +159,8 @@ public class AddEmployeeController implements Initializable {
             oOutStream = new FileOutputStream(destFile);
 
             // Transfer bytes from in to out
-            byte[]              oBytes = new byte[1024];
-            int                 nLength;
+            byte[] oBytes = new byte[1024];
+            int nLength;
             BufferedInputStream oBuffInputStream = new BufferedInputStream(oInStream);
 
             while ((nLength = oBuffInputStream.read(oBytes)) > 0) {
@@ -175,7 +176,7 @@ public class AddEmployeeController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        tfEmployeeId.setText(ticketGenerator()+"");
         // TODO
 //      targetDir = new File(getClass().getClassLoader().getResource("/images"));
         securityGroup = FXCollections.observableArrayList();
@@ -196,7 +197,7 @@ public class AddEmployeeController implements Initializable {
         bean.setUsername(tfUsername.getText());
         bean.setAddress(taAddress.getText());
 
-//      bean.setEmployeeId(tfEmployeeId.getText());
+       bean.setEmployeeId(Integer.parseInt(tfEmployeeId.getText()));
         bean.setImagePath(tfUpload.getText());
         bean.setSecurityGroup(cbSeurityGroup.getValue());
         bean.setEnabled(cbEnabled.isSelected());
@@ -204,17 +205,16 @@ public class AddEmployeeController implements Initializable {
 //      boolean isSelected = cbEnabled.isSelected();
 
         boolean result = EmployeeManager.insert(bean);
-
-        if (result) {
-
-//          copyFile(target, targetDir);
-            Alert alert = new Alert(AlertType.INFORMATION);
-
-            alert.setTitle("Employee Save");
-            alert.setContentText("New  Employee : " + bean.getFirstName() + " was added!");
-            alert.showAndWait();
-
-//          System.out.println("New  Employee : " + bean.getFirstName() + " was added!");
+        if (result == true) {
+            Notifications notification = Notifications.create()
+                    .hideAfter(Duration.seconds(6))
+                    .title("Add Employee")
+                    .text("Employee Added Successfully!")
+                    .graphic(null)
+                    .darkStyle()
+                    .position(Pos.CENTER);
+            notification.show();
+            clearFields();
         }
     }
 }

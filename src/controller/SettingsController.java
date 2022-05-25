@@ -5,16 +5,34 @@
  */
 package controller;
 
+import beans.Business;
+import beans.Employee;
 import epicpos.Preferences;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
+import tables.BusinessManager;
+import tables.EmployeeManager;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 //import library.assistant.data.model.MailServerInfo;
 //import library.assistant.database.DataHelper;
 //import library.assistant.database.DatabaseHandler;
@@ -26,11 +44,14 @@ import java.util.ResourceBundle;
 //import org.apache.logging.log4j.Logger;
 
 public class SettingsController implements Initializable {
-
+    @FXML
+    private TextField tfUploadImage;
     @FXML
     private TextField serverName;
     @FXML
     private TextField smtpPort;
+    @FXML
+    private Button btnUpload;
     @FXML
     private TextField tfCompanyName;
     @FXML
@@ -41,8 +62,9 @@ public class SettingsController implements Initializable {
     private TextField tfLocation;
     @FXML
     private TextArea taAddress;
+
     @FXML
-    private PasswordField pfPassword;
+    private ImageView picBoxImageView;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -50,11 +72,8 @@ public class SettingsController implements Initializable {
     }
 
     @FXML
-    private void handleSaveButtonAction(ActionEvent event) {
-//        int ndays = Integer.parseInt(nDaysWithoutFine.getText());
-//        float fine = Float.parseFloat(finePerDay.getText());
-//        String uname = username.getText();
-//        String pass = password.getText();
+    private void handleSaveButtonAction(ActionEvent event) throws Exception {
+
 
         Preferences preferences = Preferences.getPreferences();
         preferences.setCompanyName(tfCompanyName.getText());
@@ -64,6 +83,7 @@ public class SettingsController implements Initializable {
         preferences.setAddress(taAddress.getText());
 
         Preferences.writePreferenceToFile(preferences);
+        saveEmployeeInfo();
 
     }
 
@@ -121,5 +141,53 @@ public class SettingsController implements Initializable {
 //            progressSpinner.visibleProperty().bind(databaseExporter.runningProperty());
 //            new Thread(databaseExporter).start();
 //        }
+    }
+
+    public void handleUploadButtonAction(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+
+        // Set extension filter
+        FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
+        FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
+
+        fileChooser.getExtensionFilters().addAll(extFilterJPG, extFilterPNG);
+
+        // Show open file dialog
+        File file = fileChooser.showOpenDialog(null);
+
+        if (file != null) {
+            try {
+                BufferedImage bufferedImage = ImageIO.read(file);
+                Image image         = SwingFXUtils.toFXImage(bufferedImage, null);
+
+                 picBoxImageView.setImage(image);
+                tfUploadImage.setText(file.getAbsolutePath());
+
+            } catch (IOException ex) {
+                Logger.getLogger(AddEmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    private void saveEmployeeInfo() throws Exception {
+        Business bean = new Business();
+
+        bean.setName(tfCompanyName.getText());
+        bean.setMobile(tfContactOne.getText());
+        bean.setPhone(tfContactTwo.getText());
+        bean.setLocation(tfLocation.getText());
+        bean.setAddress(taAddress.getText());
+
+        boolean result = BusinessManager.insert(bean);
+        if (result == true) {
+            Notifications notification = Notifications.create()
+                    .hideAfter(Duration.seconds(6))
+                    .title("Company Information")
+                    .text("Business Information Added Successfully!")
+                    .graphic(null)
+                    .darkStyle()
+                    .position(Pos.CENTER);
+            notification.show();
+//            clearFields();
+        }
     }
 }

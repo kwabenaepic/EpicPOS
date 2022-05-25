@@ -55,6 +55,12 @@ public class InventoryValueController implements Initializable {
     @FXML
     private Button btnRefresh;
     @FXML
+    private Label lblStockValue;
+    @FXML
+    private Label lblSumInventoryValue;
+    @FXML
+    private Label lblSumUnitPrice;
+    @FXML
     private Button btnAdd;
     @FXML
     private SplitPane splitPane;
@@ -65,7 +71,13 @@ public class InventoryValueController implements Initializable {
     @FXML
     private TableColumn<InventoryValue, String> tblClmItemName;
     @FXML
+    private TableColumn<InventoryValue, String> tblClmDescription;
+    @FXML
+    private TableColumn<InventoryValue, String> tblClmSize;
+    @FXML
     private TableColumn<InventoryValue, Double> tblClmUnitPrice;
+    @FXML
+    private TableColumn<InventoryValue, Double> tblClmCostPrice;
     @FXML
     private TableColumn<InventoryValue, Integer> tblClmQuantity;
     @FXML
@@ -79,15 +91,18 @@ public class InventoryValueController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        configureTable();
+          configureTable();
     }
 
     private void configureTable() {
         tblClmItemId.setCellValueFactory(new PropertyValueFactory<>("productId"));
         tblClmItemName.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        tblClmDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        tblClmSize.setCellValueFactory(new PropertyValueFactory<>("size"));
         tblClmTotalValue.setCellValueFactory(new PropertyValueFactory<>("totalValue"));
         tblClmQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         tblClmUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+        tblClmCostPrice.setCellValueFactory(new PropertyValueFactory<>("costPrice"));
 
         tblInventory.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tblInventory.setItems(null);
@@ -108,8 +123,8 @@ public class InventoryValueController implements Initializable {
     @FXML
     private void btnRefreshOnAction(ActionEvent event) throws SQLException {
         tblInventory.getItems().clear();
-//        tableData.addAll(InventoryValueManager.getInventoryValueList());
-//        tblInventory.setItems(tableData);
+        tableData.addAll(InventoryValueManager.getInventoryValueList());
+        tblInventory.setItems(tableData);
 
     }
 
@@ -162,7 +177,7 @@ public class InventoryValueController implements Initializable {
         JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(beanInventoryValueList);
         HashMap parameters = new HashMap<>();
 //        parameters.put("receiptDate", dateLocal.getText());
-        System.out.print("Hello");
+
         try {
             JasperPrint printFileName = JasperFillManager.fillReport(
                     sourceFileName, parameters, beanColDataSource);
